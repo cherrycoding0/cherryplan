@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Read(//c/Users/D_20250801/.claude/projects/d--cherryplan/memory/**)"
+    ]
+  }
+}
