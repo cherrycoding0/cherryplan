@@ -8,6 +8,7 @@ export const apps = [
     difficulty: '⭐',
     path: '/reading-log',
     color: '#FFE4EC',
+    devDiary: 'https://rustic-birch-47d.notion.site/333bb3574f3081f29974e4d7d968c227',
   },
   {
     id: 'menu-picker',
@@ -18,6 +19,7 @@ export const apps = [
     difficulty: '⭐',
     path: '/menu-picker',
     color: '#FFF3E0',
+    devDiary: 'https://rustic-birch-47d.notion.site/333bb3574f3081cd8028f09c7293f7ce',
   },
   {
     id: 'pomodoro',
@@ -28,6 +30,7 @@ export const apps = [
     difficulty: '⭐',
     path: '/pomodoro',
     color: '#E8F5E9',
+    devDiary: 'https://rustic-birch-47d.notion.site/333bb3574f308113ac67e9ae38f29971',
   },
   {
     id: 'retro-board',
@@ -38,6 +41,7 @@ export const apps = [
     difficulty: '⭐⭐',
     path: '/retro-board',
     color: '#E3F2FD',
+    devDiary: 'https://rustic-birch-47d.notion.site/333bb3574f3081639480c884c6b1ad75',
   },
   {
     id: 'habit-tracker',
@@ -48,6 +52,7 @@ export const apps = [
     difficulty: '⭐⭐',
     path: '/habit-tracker',
     color: '#F3E5F5',
+    devDiary: 'https://rustic-birch-47d.notion.site/333bb3574f30818fb08fc4d5ac1f2292',
   },
   {
     id: 'budget',
@@ -58,6 +63,7 @@ export const apps = [
     difficulty: '⭐⭐',
     path: '/budget',
     color: '#E0F7FA',
+    devDiary: 'https://rustic-birch-47d.notion.site/334bb3574f30810f91b5f320cb4c3bea',
   },
   {
     id: 'ai-diary',
@@ -69,5 +75,6 @@ export const apps = [
     path: '/ai-diary',
     color: '#FFF8E1',
     highlight: true,
+    devDiary: '',
   },
 ]
