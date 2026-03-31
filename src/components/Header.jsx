@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { apps } from '../data/apps'
 
 function GitHubIcon() {
   return (
@@ -19,6 +20,7 @@ export default function Header() {
   const location = useLocation()
   const navigate = useNavigate()
   const isHome = location.pathname === '/'
+  const currentApp = apps.find((a) => a.path === location.pathname)
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-pink-100">
@@ -44,16 +46,28 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* 우측: GitHub 링크 */}
-        <a
-          href="https://github.com/cherrycoding0"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-500 hover:text-[#FF6B8A] transition-colors"
-          aria-label="GitHub 프로필"
-        >
-          <GitHubIcon />
-        </a>
+        {/* 우측: 개발 일지 + GitHub */}
+        <div className="flex items-center gap-3">
+          {currentApp?.devDiary && (
+            <a
+              href={currentApp.devDiary}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-semibold text-gray-400 hover:text-[#FF6B8A] transition-colors border border-gray-200 hover:border-[#FF6B8A] px-2.5 py-1 rounded-full"
+            >
+              📝 개발 일지
+            </a>
+          )}
+          <a
+            href="https://github.com/cherrycoding0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-[#FF6B8A] transition-colors"
+            aria-label="GitHub 프로필"
+          >
+            <GitHubIcon />
+          </a>
+        </div>
       </div>
     </header>
   )

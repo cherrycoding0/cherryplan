@@ -16,7 +16,10 @@ async function createPage(databaseId, properties) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ parent: { database_id: databaseId }, properties }),
   })
-  if (!res.ok) throw new Error(`Notion API error: ${res.status}`)
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`${res.status}: ${body}`)
+  }
   return res.json()
 }
 
@@ -26,7 +29,10 @@ async function updatePage(pageId, properties) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ properties }),
   })
-  if (!res.ok) throw new Error(`Notion API error: ${res.status}`)
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`${res.status}: ${body}`)
+  }
   return res.json()
 }
 
@@ -56,8 +62,18 @@ async function syncItems({ items, dbId, buildProps, getTitle }) {
     try {
       const props = buildProps(item)
       if (item.notionId) {
-        await updatePage(item.notionId, props)
-        updated.push(item)
+        try {
+          await updatePage(item.notionId, props)
+          updated.push(item)
+        } catch (err) {
+          // 아카이브된 페이지는 새로 생성
+          if (err.message.includes('archived')) {
+            const page = await createPage(dbId, props)
+            updated.push({ ...item, notionId: page.id })
+          } else {
+            throw err
+          }
+        }
       } else {
         const page = await createPage(dbId, props)
         updated.push({ ...item, notionId: page.id })
@@ -133,14 +149,15 @@ export async function syncMenu(items) {
 }
 
 // ── 태스크 보드 ───────────────────────────────────────────────
+// 실제 DB 필드: 내용(title), 구분(select), 작성자(text), 날짜(date)
 const COLUMN_LABEL = { todo: '해야할 일', doing: '하는 중', done: '완료' }
 
 function buildRetroBoardProps(card) {
   const props = {
     '내용': { title: [{ text: { content: card.text } }] },
-    '상태': { select: { name: COLUMN_LABEL[card.column] ?? '해야할 일' } },
+    '구분': { select: { name: COLUMN_LABEL[card.column] ?? '해야할 일' } },
   }
-  if (card.category) props['카테고리'] = { select: { name: card.category } }
+  if (card.category) props['작성자'] = { rich_text: [{ text: { content: card.category } }] }
   if (card.createdAt) props['날짜'] = { date: { start: card.createdAt.slice(0, 10) } }
   return props
 }
@@ -173,15 +190,17 @@ export async function syncHabit(logs) {
 }
 
 // ── 가계부 ─────────────────────────────────────────────────────
+// 실제 DB 필드: 내역(title), 타입(select), 금액(number), 카테고리(select), 날짜(date), 메모(text)
 const BUDGET_TYPE_MAP = { income: '수입', expense: '지출' }
 
 function buildBudgetProps(item) {
   return {
-    '내용':    { title: [{ text: { content: item.memo || item.category } }] },
-    '유형':    { select: { name: BUDGET_TYPE_MAP[item.type] ?? '지출' } },
+    '내역':    { title: [{ text: { content: item.memo || item.category } }] },
+    '타입':    { select: { name: BUDGET_TYPE_MAP[item.type] ?? '지출' } },
     '금액':    { number: item.amount },
     '카테고리':{ select: { name: item.category } },
     '날짜':    { date: { start: item.date } },
+    '메모':    { rich_text: [{ text: { content: item.memo || '' } }] },
   }
 }
 
