@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { usePomodoroContext, DEFAULT_MINS } from '../context/PomodoroContext'
+import { syncPomodoro } from '../utils/notionSync'
+import NotionSyncButton from '../components/NotionSyncButton'
 
 function formatTime(seconds) {
   const m = String(Math.floor(seconds / 60)).padStart(2, '0')
@@ -121,6 +123,17 @@ export default function Pomodoro() {
 
   const [showSettings, setShowSettings] = useState(false)
 
+  const POMODORO_KEY = 'cherryplan_pomodoro'
+
+  async function handleNotionSync() {
+    const { updated, errors } = await syncPomodoro(sessions)
+    // notionId를 localStorage에 반영
+    const idMap = Object.fromEntries(updated.map((s) => [s.completedAt, s.notionId]))
+    const next = sessions.map((s) => idMap[s.completedAt] ? { ...s, notionId: idMap[s.completedAt] } : s)
+    localStorage.setItem(POMODORO_KEY, JSON.stringify(next))
+    return { updated, errors }
+  }
+
   const currentMode = modes[mode]
   const progress = timeLeft / currentMode.seconds
   const dotsFilled = sessionCount % 4
@@ -149,13 +162,16 @@ export default function Pomodoro() {
           <h1 className="text-2xl font-extrabold text-[#1A1A2E]">⏱️ 포모도로 타이머</h1>
           <p className="text-sm text-gray-400 mt-0.5">25분 집중, 5분 휴식으로 생산성을 높여요</p>
         </div>
-        <button
-          onClick={() => setShowSettings((v) => !v)}
-          className={`w-9 h-9 rounded-full flex items-center justify-center text-base transition-colors ${showSettings ? 'bg-[#FFE4EC] text-[#FF6B8A]' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
-          title="타이머 설정"
-        >
-          ⚙️
-        </button>
+        <div className="flex items-center gap-2">
+          <NotionSyncButton onSync={handleNotionSync} disabled={sessions.length === 0} />
+          <button
+            onClick={() => setShowSettings((v) => !v)}
+            className={`w-9 h-9 rounded-full flex items-center justify-center text-base transition-colors ${showSettings ? 'bg-[#FFE4EC] text-[#FF6B8A]' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
+            title="타이머 설정"
+          >
+            ⚙️
+          </button>
+        </div>
       </div>
 
       {/* 설정 패널 */}

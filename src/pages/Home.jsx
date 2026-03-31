@@ -3,7 +3,7 @@ import { apps } from '../data/apps'
 
 export default function Home() {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12 flex flex-col gap-16">
+    <div className="max-w-5xl mx-auto px-4 py-12 flex flex-col gap-8">
       {/* 히어로 섹션 */}
       <section className="text-center flex flex-col items-center gap-5">
         <div className="flex items-center justify-center gap-2">
@@ -16,9 +16,6 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           <p className="text-xl sm:text-2xl font-semibold text-[#1A1A2E]">
             바이브코딩으로 만든 미니앱 모음
-          </p>
-          <p className="text-gray-500 text-base sm:text-lg">
-            Claude Code로 7일 만에 완성한 포트폴리오
           </p>
         </div>
 
