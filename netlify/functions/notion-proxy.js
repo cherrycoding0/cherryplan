@@ -1,14 +1,6 @@
 exports.handler = async (event) => {
-  // DEBUG: path 확인용 (배포 후 /.netlify/functions/notion-proxy 접근해서 확인)
-  if (event.httpMethod === 'GET' && !event.path.includes('/api/')) {
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ok: true, path: event.path, rawUrl: event.rawUrl, qs: event.queryStringParameters }),
-    }
-  }
-
-  const notionPath = event.path.replace(/^\/?api\/notion/, '') || '/'
+  const splat = event.queryStringParameters?.notionPath || ''
+  const notionPath = '/' + splat
   const url = `https://api.notion.com${notionPath}`
 
   try {
