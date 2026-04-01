@@ -1,15 +1,5 @@
 exports.handler = async (event) => {
-  // DEBUG
-  if (event.httpMethod === 'GET') {
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path: event.path, rawUrl: event.rawUrl, qs: event.queryStringParameters }),
-    }
-  }
-
-  const splat = event.queryStringParameters?.notionPath || ''
-  const notionPath = '/' + splat
+  const notionPath = event.path.replace(/^\/api\/notion/, '')
   const url = `https://api.notion.com${notionPath}`
 
   try {
