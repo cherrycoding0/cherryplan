@@ -9,6 +9,7 @@ export const NOTION_DB = {
   habit:      '5c073afed9fe447fa15f1e1b3296b3ba',
   budget:     'f48a5fa8d5b54a36bc0bcd7567d57725',
   aiDiary:    '7e49ec25746f487ab6e15023339e8100',
+  movieLog:   'NOTION_MOVIE_DB_ID',
 }
 
 async function createPage(databaseId, properties) {
@@ -346,6 +347,33 @@ export async function fetchBudget() {
     memo:     txt(p.properties['메모']) || txt(p.properties['내역']),
     date:     dt(p.properties['날짜']),
   }))
+}
+
+// ── 영화/드라마 기록 ────────────────────────────────────────────
+const MOVIE_STATUS_MAP = { want: '보고싶어요', watching: '보는중', done: '봤어요' }
+
+function buildMovieProps(item) {
+  const props = {
+    '제목':  { title:     [{ text: { content: item.title || '' } }] },
+    '타입':  { select:    { name: item.type === '드라마' ? '드라마' : '영화' } },
+    '상태':  { select:    { name: MOVIE_STATUS_MAP[item.status] ?? '보고싶어요' } },
+    '별점':  { number:    item.rating ?? 0 },
+    '감상':  { rich_text: [{ text: { content: item.memo || '' } }] },
+  }
+  if (item.doneAt) props['완료일'] = { date: { start: item.doneAt } }
+  return props
+}
+
+export async function syncMovieLog(items) {
+  if (!NOTION_DB.movieLog || NOTION_DB.movieLog === 'NOTION_MOVIE_DB_ID') {
+    throw new Error('Notion 영화/드라마 DB ID가 설정되지 않았어요. notionSync.js의 NOTION_DB.movieLog를 채워주세요.')
+  }
+  return syncItems({
+    items,
+    dbId: NOTION_DB.movieLog,
+    buildProps: buildMovieProps,
+    getTitle: (i) => i.title,
+  })
 }
 
 export async function syncAiDiary(entries) {

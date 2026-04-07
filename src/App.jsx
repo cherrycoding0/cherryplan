@@ -4,7 +4,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import ReadingLog from './pages/ReadingLog'
-import MenuPicker from './pages/MenuPicker'
+import MovieLog from './pages/MovieLog'
 import Pomodoro from './pages/Pomodoro'
 import RetroBoard from './pages/RetroBoard'
 import HabitTracker from './pages/HabitTracker'
@@ -85,7 +85,7 @@ function AnimatedRoutes() {
       <Routes location={location}>
         <Route path="/" element={<Home />} />
         <Route path="/reading-log" element={<ReadingLog />} />
-        <Route path="/menu-picker" element={<MenuPicker />} />
+        <Route path="/movie-log" element={<MovieLog />} />
         <Route path="/pomodoro" element={<Pomodoro />} />
         <Route path="/retro-board" element={<RetroBoard />} />
         <Route path="/habit-tracker" element={<HabitTracker />} />
