@@ -63,4 +63,4 @@ src/
 
 ---
 
-Made with ♥ by [cherrycoding0](https://github.com/cherrycoding0/cherryplan/3dsite)
+Made with ♥ by [cherrycoding0](https://github.com/cherrycoding0/cherryplan)
