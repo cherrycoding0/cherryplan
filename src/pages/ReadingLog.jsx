@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { syncReadingLog } from '../utils/notionSync'
+import { useState, useRef, useEffect } from 'react'
+import { syncReadingLog, fetchReadingLog } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
 
 const STORAGE_KEY = 'cherryplan_reading-log'
@@ -350,6 +350,11 @@ export default function ReadingLog() {
   const [books, setBooks] = useState(loadBooks)
   const [filter, setFilter] = useState('all')
   const [modal, setModal] = useState(null) // null | 'add' | book(for edit)
+  const [notionSample, setNotionSample] = useState([])
+
+  useEffect(() => {
+    if (books.length === 0) fetchReadingLog().then(setNotionSample)
+  }, [])
 
   async function handleNotionSync() {
     const { updated } = await syncReadingLog(books)
@@ -425,19 +430,30 @@ export default function ReadingLog() {
 
       {/* 카드 그리드 */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 py-16 text-center">
-          <span className="text-6xl">📖</span>
-          <p className="text-gray-400">
-            {filter === 'all' ? '아직 기록된 책이 없어요' : `${STATUS_META[filter]?.label} 책이 없어요`}
-          </p>
-          <button
-            onClick={() => setModal('add')}
-            className="mt-2 px-5 py-2 rounded-full text-sm font-semibold text-white"
-            style={{ backgroundColor: '#FF6B8A' }}
-          >
-            첫 번째 책 추가하기
-          </button>
-        </div>
+        books.length === 0 && notionSample.length > 0 ? (
+          <>
+            <p className="text-xs text-gray-400 font-semibold">📖 예시 데이터 · 직접 추가하면 내 기록이 표시돼요</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {notionSample.map((book) => (
+                <BookCard key={book.id} book={book} onDelete={() => {}} onEdit={() => {}} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col items-center gap-3 py-16 text-center">
+            <span className="text-6xl">📖</span>
+            <p className="text-gray-400">
+              {filter === 'all' ? '아직 기록된 책이 없어요' : `${STATUS_META[filter]?.label} 책이 없어요`}
+            </p>
+            <button
+              onClick={() => setModal('add')}
+              className="mt-2 px-5 py-2 rounded-full text-sm font-semibold text-white"
+              style={{ backgroundColor: '#FF6B8A' }}
+            >
+              첫 번째 책 추가하기
+            </button>
+          </div>
+        )
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {filtered.map((book) => (

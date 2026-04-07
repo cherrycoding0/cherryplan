@@ -83,6 +83,9 @@ cherryplan_[앱-id]
 ## 환경 변수
 ```
 VITE_ANTHROPIC_API_KEY=   # AI 일기 도우미에서 사용
+VITE_TMDB_API_KEY=        # 영화/드라마 기록에서 사용
+VITE_SYNC_PASSWORD=       # Notion 연동 동기화 비밀번호
+NOTION_TOKEN=             # Notion API 토큰
 ```
 `.env.example` 참고. 실제 키는 `.env` 파일에 (gitignore됨).
 
@@ -95,6 +98,81 @@ VITE_ANTHROPIC_API_KEY=   # AI 일기 도우미에서 사용
 
 ## 배포
 - 플랫폼: Netlify
+- 배포 URL: https://cherryplan.netlify.app/
 - 빌드 커맨드: `npm run build`
 - publish 디렉토리: `dist`
 - SPA 리다이렉트: `public/_redirects` 파일에 `/* /index.html 200` 추가 필요
+
+## 후원 버튼
+- GitHub Sponsors 승인 대기 중 (https://github.com/sponsors/cherrycoding0)
+- ❌ Buy Me a Coffee 사용 안 함 (한국 환경에 맞지 않음)
+- ✅ 승인되면 Footer.jsx에 GitHub Sponsors 버튼 추가 예정
+  - 스타일: GitHub 다크 버튼 `#24292E`, 텍스트 `🩷 Sponsor`
+  - 위치: Footer 하단, 새 탭으로 열기
+
+---
+
+## 📝 아티클 기록 (ARTICLE_NOTES)
+
+> 이 섹션은 작업하면서 아티클 소재를 쌓는 공간이야.
+> 작업 완료할 때마다 아래 형식으로 추가해줘.
+> 나중에 "CherryPlan 제작기" 2편 아티클로 만들 예정.
+
+### 기록 형식
+```
+### [날짜] [작업한 것]
+- **뭘 만들었나:** 한 줄 요약
+- **쓴 프롬프트:** 핵심 프롬프트
+- **막힌 부분:** (있었다면)
+- **어떻게 해결했나:** 해결 방법
+- **결과:** 완성된 것, 느낀 점
+```
+
+---
+
+### ✅ 완성된 앱 기록 (요약)
+- 📚 독서 기록 — Notion 연동, 개발 일지 등록 완료
+- 🍽️ 오늘의 메뉴 — Notion 연동, 개발 일지 등록 완료
+- ⏱️ 포모도로 타이머 — Notion 연동, 개발 일지 등록 완료
+- 📋 태스크 보드 — Notion 연동, 개발 일지 등록 완료
+- ✅ 습관 트래커 — Notion 연동, 개발 일지 등록 완료
+- 💰 가계부 — Notion 연동, 개발 일지 등록 완료
+
+---
+
+### 🔜 남은 작업 기록 (작업 완료 시 채우기)
+
+### [ ] 🩷 GitHub Sponsors 버튼 (승인 후 작업)
+- **뭘 만들었나:**
+- **쓴 프롬프트:**
+- **막힌 부분:**
+- **어떻게 해결했나:**
+- **결과:**
+
+### [2026-04-07] 🤖 AI 일기 도우미
+- **뭘 만들었나:** 일기 텍스트 입력 → Claude Haiku API 호출 → 감정 분석 / 긍정적 리프레이밍 / 내일을 위한 한 마디 피드백 카드 표시. localStorage 저장 + Notion 동기화 지원.
+- **쓴 프롬프트:** "AI 일기 도우미 앱(AiDiary.jsx)을 완성해줘. Claude API로 감정 분석·긍정적 리프레이밍·내일을 위한 한 마디 피드백 생성. USE_MOCK=true일 때 목업 응답. Notion 연동. CherryPlan 디자인 시스템 통일."
+- **막힌 부분:** 브라우저에서 Anthropic API 직접 호출 시 CORS 정책 → `anthropic-dangerous-direct-browser-access: true` 헤더 필요. Notion AI 일기 DB는 별도 생성 필요(ID 플레이스홀더로 처리).
+- **어떻게 해결했나:** fetch 헤더에 `anthropic-dangerous-direct-browser-access: true` 추가. AI 응답을 JSON으로 강제하는 프롬프트 작성 + regex로 JSON 파싱. USE_MOCK 상수로 목업/실API 분기.
+- **결과:** textarea 입력 → 로딩("✨ Claude가 읽고 있어요...") → 체리 핑크 피드백 카드 표시. 과거 일기 아코디언 목록. 삭제 기능. Notion 동기화 버튼(DB ID 미설정 시 안내 메시지 표시).
+
+### [ ] 🎬 영화/드라마 기록
+- **뭘 만들었나:**
+- **쓴 프롬프트:**
+- **막힌 부분:**
+- **어떻게 해결했나:**
+- **결과:**
+
+### [ ] 😌 무드 트래커
+- **뭘 만들었나:**
+- **쓴 프롬프트:**
+- **막힌 부분:**
+- **어떻게 해결했나:**
+- **결과:**
+
+### [ ] 📊 통합 대시보드
+- **뭘 만들었나:**
+- **쓴 프롬프트:**
+- **막힌 부분:**
+- **어떻게 해결했나:**
+- **결과:**

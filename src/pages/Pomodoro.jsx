@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePomodoroContext, DEFAULT_MINS } from '../context/PomodoroContext'
-import { syncPomodoro } from '../utils/notionSync'
+import { syncPomodoro, fetchPomodoro } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
 
 function formatTime(seconds) {
@@ -122,8 +122,13 @@ export default function Pomodoro() {
   } = usePomodoroContext()
 
   const [showSettings, setShowSettings] = useState(false)
+  const [notionSample, setNotionSample] = useState([])
 
   const POMODORO_KEY = 'cherryplan_pomodoro'
+
+  useEffect(() => {
+    if (sessions.length === 0) fetchPomodoro().then(setNotionSample)
+  }, [])
 
   async function handleNotionSync() {
     const { updated, errors } = await syncPomodoro(sessions)
@@ -268,7 +273,25 @@ export default function Pomodoro() {
           </span>
         </div>
 
-        {todayList.length === 0 ? (
+        {todayList.length === 0 && sessions.length === 0 && notionSample.length > 0 ? (
+          <>
+            <p className="text-xs text-gray-400">📖 예시 데이터 · 세션 완료 시 내 기록이 표시돼요</p>
+            <ul className="flex flex-col gap-2 max-h-48 overflow-y-auto">
+              {notionSample.map((s) => (
+                <li key={s.id} className="flex items-start justify-between text-sm gap-2">
+                  <div className="flex items-start gap-2 min-w-0">
+                    <span className="w-2 h-2 rounded-full mt-1 shrink-0" style={{ backgroundColor: modes[s.type]?.color ?? '#FF6B8A' }} />
+                    <div className="min-w-0">
+                      <span className="text-gray-600">{modes[s.type]?.label ?? '집중'} {Math.floor(s.duration / 60)}분</span>
+                      {s.task && <p className="text-xs text-gray-400 truncate">{s.task}</p>}
+                    </div>
+                  </div>
+                  <span className="text-gray-400 shrink-0">{s.completedAt ? formatCompletedAt(s.completedAt) : ''}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : todayList.length === 0 ? (
           <p className="text-sm text-gray-400 text-center py-4">
             아직 완료된 세션이 없어요. 시작해볼까요? 💪
           </p>

@@ -20,7 +20,7 @@ export default function Home() {
         </div>
 
         <a
-          href="https://github.com/cherrycoding0"
+          href="https://github.com/cherrycoding0/cherryplan/3dsite"
           target="_blank"
           rel="noopener noreferrer"
           className="

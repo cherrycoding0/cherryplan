@@ -59,7 +59,7 @@ export default function Header() {
             </a>
           )}
           <a
-            href="https://github.com/cherrycoding0"
+            href="https://github.com/cherrycoding0/cherryplan/3dsite"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-500 hover:text-[#FF6B8A] transition-colors"

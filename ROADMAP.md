@@ -3,7 +3,7 @@
 ## 배포 정보
 
 - **배포 URL**: https://cherryplan.netlify.app/
-- **GitHub**: https://github.com/cherrycoding0/cherryplan
+- **GitHub**: https://github.com/cherrycoding0/cherryplan/3dsite/cherryplan
 - **Netlify 환경변수 필요**: `NOTION_TOKEN`, `VITE_SYNC_PASSWORD`, `VITE_ANTHROPIC_API_KEY` (AI 일기 완성 후)
 
 ---
@@ -25,7 +25,7 @@
 
 | 순서 | 항목 | 비고 |
 |------|------|------|
-| 1 | ☕ Buy Me a Coffee 버튼 | Footer에 삽입, buymeacoffee.com 계정 필요 |
+| 1 | 🩷 GitHub Sponsors 버튼 | Footer에 삽입, 승인 대기 중 (https://github.com/sponsors/cherrycoding0) |
 | 2 | 🤖 AI 일기 도우미 | Claude API (`VITE_ANTHROPIC_API_KEY`), 개발 일지 등록 |
 | 3 | 🎬 영화/드라마 기록 | 오늘의 메뉴 대체, TMDB API (`VITE_TMDB_API_KEY`) |
 | 4 | 😌 무드 트래커 | 신규 앱, AI 일기와 연동 가능 |
@@ -33,12 +33,13 @@
 
 ---
 
-## ☕ Buy Me a Coffee 구현 메모
+## 🩷 GitHub Sponsors 구현 메모
 
 - 위치: `Footer.jsx` (현재 Made with ♥ 옆)
-- 방법: `https://www.buymeacoffee.com/{계정명}` 링크 버튼
-- 스타일: 노란 버튼 (`#FFDD00`), `☕ Buy me a coffee` 텍스트
-- buymeacoffee.com 계정 생성 후 계정명 알려주면 즉시 삽입 가능
+- 링크: `https://github.com/sponsors/cherrycoding0`
+- 스타일: 다크 버튼 (`#24292E`), 텍스트 `🩷 Sponsor`
+- ⏳ GitHub Sponsors 승인 대기 중 — 승인되면 즉시 추가 가능
+- ❌ Buy Me a Coffee 사용 안 함 (한국 환경에 맞지 않음)
 
 ---
 

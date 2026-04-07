@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
-import { syncBudget } from '../utils/notionSync'
+import { syncBudget, fetchBudget } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
@@ -147,9 +147,14 @@ function TransactionItem({ item, onDelete }) {
 }
 
 export default function Budget() {
-  const [items,     setItems]     = useState(load)
-  const [ym,        setYm]        = useState(currentYM)
-  const [showForm,  setShowForm]  = useState(false)
+  const [items,        setItems]        = useState(load)
+  const [ym,           setYm]           = useState(currentYM)
+  const [showForm,     setShowForm]     = useState(false)
+  const [notionSample, setNotionSample] = useState([])
+
+  useEffect(() => {
+    if (items.length === 0) fetchBudget().then(setNotionSample)
+  }, [])
 
   const monthItems = useMemo(() => items.filter((i) => toYM(i.date) === ym), [items, ym])
 
@@ -298,6 +303,15 @@ export default function Budget() {
           <div className="max-h-80 overflow-y-auto">
             {[...monthItems].sort((a, b) => b.date.localeCompare(a.date)).map((item) => (
               <TransactionItem key={item.id} item={item} onDelete={deleteItem} />
+            ))}
+          </div>
+        </div>
+      ) : items.length === 0 && notionSample.length > 0 ? (
+        <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-3">
+          <p className="text-xs text-gray-400 font-semibold">📖 예시 데이터 · 직접 추가하면 내 기록이 표시돼요</p>
+          <div className="max-h-80 overflow-y-auto opacity-70">
+            {notionSample.map((item) => (
+              <TransactionItem key={item.id} item={item} onDelete={() => {}} />
             ))}
           </div>
         </div>

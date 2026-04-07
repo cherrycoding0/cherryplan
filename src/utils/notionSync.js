@@ -8,6 +8,7 @@ export const NOTION_DB = {
   retroBoard: '4c5905c527e24951b55b1bc360576888',
   habit:      '5c073afed9fe447fa15f1e1b3296b3ba',
   budget:     'f48a5fa8d5b54a36bc0bcd7567d57725',
+  aiDiary:    '7e49ec25746f487ab6e15023339e8100',
 }
 
 async function createPage(databaseId, properties) {
@@ -210,5 +211,151 @@ export async function syncBudget(items) {
     dbId: NOTION_DB.budget,
     buildProps: buildBudgetProps,
     getTitle: (i) => i.memo || i.category,
+  })
+}
+
+// ── AI 일기 ────────────────────────────────────────────────────
+// Notion DB 필드: 날짜(title), 일기내용(rich_text), 감정분석(rich_text), 리프레이밍(rich_text), 내일한마디(rich_text)
+function buildDiaryProps(entry) {
+  return {
+    '날짜':       { title:     [{ text: { content: entry.date } }] },
+    '일기내용':   { rich_text: [{ text: { content: entry.content || '' } }] },
+    '감정분석':   { rich_text: [{ text: { content: entry.feedback?.emotion  || '' } }] },
+    '리프레이밍': { rich_text: [{ text: { content: entry.feedback?.reframe  || '' } }] },
+    '내일한마디': { rich_text: [{ text: { content: entry.feedback?.tomorrow || '' } }] },
+    '공개':       { checkbox: entry.isPublic ?? false },
+  }
+}
+
+// ── Notion 조회 공통 헬퍼 ────────────────────────────────────────
+function txt(prop) {
+  return prop?.title?.[0]?.plain_text ?? prop?.rich_text?.[0]?.plain_text ?? ''
+}
+function sel(prop)  { return prop?.select?.name ?? '' }
+function num(prop)  { return prop?.number ?? 0 }
+function chk(prop)  { return prop?.checkbox ?? false }
+function dt(prop)   { return prop?.date?.start ?? '' }
+
+async function queryDB(dbId, body = {}) {
+  if (!dbId) return []
+  try {
+    const res = await fetch(`${BASE}/databases/${dbId}/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page_size: 12, ...body }),
+    })
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.results ?? []
+  } catch { return [] }
+}
+
+// ── 독서 기록 조회 ──────────────────────────────────────────────
+const STATUS_REVERSE = { '읽고 싶음': 'want', '읽는 중': 'reading', '완독': 'done' }
+
+export async function fetchReadingLog() {
+  const rows = await queryDB(NOTION_DB.readingLog, {
+    sorts: [{ property: '추가일', direction: 'descending' }],
+  })
+  return rows.map((p) => ({
+    id:        p.id,
+    title:     txt(p.properties['제목']),
+    author:    txt(p.properties['저자']),
+    publisher: txt(p.properties['출판사']),
+    status:    STATUS_REVERSE[sel(p.properties['상태'])] ?? 'want',
+    rating:    num(p.properties['별점']),
+    progress:  num(p.properties['진행률']),
+    memo:      txt(p.properties['감상']),
+    addedAt:   dt(p.properties['추가일']),
+  }))
+}
+
+// ── 오늘의 메뉴 조회 ─────────────────────────────────────────────
+const CAT_REVERSE = { '한식': 'korean', '중식': 'chinese', '일식': 'japanese', '양식': 'western' }
+
+export async function fetchMenu() {
+  const rows = await queryDB(NOTION_DB.menu, {
+    sorts: [{ property: '날짜', direction: 'descending' }],
+  })
+  return rows.map((p) => ({
+    id:       p.id,
+    menu:     txt(p.properties['메뉴명']),
+    category: CAT_REVERSE[sel(p.properties['카테고리'])] ?? 'all',
+    pickedAt: dt(p.properties['날짜']) || p.created_time,
+  }))
+}
+
+// ── 포모도로 세션 조회 ────────────────────────────────────────────
+const TYPE_REVERSE = { '집중': 'focus', '휴식': 'break', '긴 휴식': 'longBreak' }
+
+export async function fetchPomodoro() {
+  const rows = await queryDB(NOTION_DB.pomodoro, {
+    sorts: [{ property: '완료 시간', direction: 'descending' }],
+  })
+  return rows.map((p) => ({
+    id:          p.id,
+    task:        txt(p.properties['할 일']),
+    type:        TYPE_REVERSE[sel(p.properties['타입'])] ?? 'focus',
+    duration:    num(p.properties['소요(분)']) * 60,
+    completedAt: dt(p.properties['완료 시간']) || p.created_time,
+  }))
+}
+
+// ── 태스크 보드 조회 ─────────────────────────────────────────────
+const COL_REVERSE = { '해야할 일': 'todo', '하는 중': 'doing', '완료': 'done' }
+
+export async function fetchRetroBoard() {
+  const rows = await queryDB(NOTION_DB.retroBoard, {
+    sorts: [{ property: '날짜', direction: 'descending' }],
+  })
+  return rows.map((p) => ({
+    id:        p.id,
+    text:      txt(p.properties['내용']),
+    column:    COL_REVERSE[sel(p.properties['구분'])] ?? 'todo',
+    category:  txt(p.properties['작성자']),
+    createdAt: dt(p.properties['날짜']) || p.created_time,
+  }))
+}
+
+// ── 습관 트래커 조회 ─────────────────────────────────────────────
+export async function fetchHabit() {
+  const rows = await queryDB(NOTION_DB.habit, {
+    sorts: [{ property: '날짜', direction: 'descending' }],
+    page_size: 20,
+  })
+  return rows.map((p) => ({
+    id:        p.id,
+    habitName: txt(p.properties['습관명']),
+    done:      chk(p.properties['완료']),
+    date:      dt(p.properties['날짜']),
+  }))
+}
+
+// ── 가계부 조회 ──────────────────────────────────────────────────
+const BUDGET_TYPE_REVERSE = { '수입': 'income', '지출': 'expense' }
+
+export async function fetchBudget() {
+  const rows = await queryDB(NOTION_DB.budget, {
+    sorts: [{ property: '날짜', direction: 'descending' }],
+  })
+  return rows.map((p) => ({
+    id:       p.id,
+    type:     BUDGET_TYPE_REVERSE[sel(p.properties['타입'])] ?? 'expense',
+    amount:   num(p.properties['금액']),
+    category: sel(p.properties['카테고리']),
+    memo:     txt(p.properties['메모']) || txt(p.properties['내역']),
+    date:     dt(p.properties['날짜']),
+  }))
+}
+
+export async function syncAiDiary(entries) {
+  if (!NOTION_DB.aiDiary) {
+    throw new Error('Notion AI 일기 DB ID가 설정되지 않았어요. notionSync.js의 NOTION_DB.aiDiary를 채워주세요.')
+  }
+  return syncItems({
+    items: entries,
+    dbId: NOTION_DB.aiDiary,
+    buildProps: buildDiaryProps,
+    getTitle: (e) => e.date,
   })
 }

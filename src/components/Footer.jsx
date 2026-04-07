@@ -10,7 +10,7 @@ export default function Footer() {
           <span className="text-[#FF6B8A]">♥</span>
           {' '}by{' '}
           <a
-            href="https://github.com/cherrycoding0"
+            href="https://github.com/cherrycoding0/cherryplan/3dsite"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-[#FF6B8A] transition-colors underline underline-offset-2"

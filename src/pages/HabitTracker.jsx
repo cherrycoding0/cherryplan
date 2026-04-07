@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { syncHabit } from '../utils/notionSync'
+import { useState, useEffect } from 'react'
+import { syncHabit, fetchHabit } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
 
 const HABIT_KEY = 'cherryplan_habit-tracker'
@@ -169,10 +169,15 @@ function AddHabitForm({ existingNames, onAdd, onCancel }) {
 export default function HabitTracker() {
   const [data, setData] = useState(load)
   const [adding, setAdding] = useState(false)
-  const [expanded, setExpanded] = useState(null)   // habitId
-  const [editing, setEditing] = useState(null)     // habitId
+  const [expanded, setExpanded] = useState(null)
+  const [editing, setEditing] = useState(null)
   const [showInactive, setShowInactive] = useState(false)
+  const [notionSample, setNotionSample] = useState([])
   const today = todayStr()
+
+  useEffect(() => {
+    if (data.habits.length === 0) fetchHabit().then(setNotionSample)
+  }, [])
 
   function updateData(next) { setData(next); save(next) }
 
@@ -367,12 +372,28 @@ export default function HabitTracker() {
         </div>
       )}
 
-      {/* 빈 상태 */}
+      {/* 빈 상태 / 예시 */}
       {data.habits.length === 0 && !adding && (
-        <div className="text-center py-8 text-gray-400">
-          <p className="text-4xl mb-3">🌱</p>
-          <p className="text-sm">첫 번째 습관을 추가해보세요!</p>
-        </div>
+        notionSample.length > 0 ? (
+          <div className="flex flex-col gap-3">
+            <p className="text-xs text-gray-400 font-semibold">📖 예시 데이터 · 직접 추가하면 내 기록이 표시돼요</p>
+            {[...new Set(notionSample.map((l) => l.habitName))].slice(0, 6).map((name) => {
+              const logs = notionSample.filter((l) => l.habitName === name)
+              const doneCount = logs.filter((l) => l.done).length
+              return (
+                <div key={name} className="bg-white rounded-2xl shadow-md p-4 flex items-center justify-between opacity-70">
+                  <span className="text-sm font-semibold text-[#1A1A2E]">{name}</span>
+                  <span className="text-xs text-gray-400">{doneCount}회 완료</span>
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-400">
+            <p className="text-4xl mb-3">🌱</p>
+            <p className="text-sm">첫 번째 습관을 추가해보세요!</p>
+          </div>
+        )
       )}
     </div>
   )

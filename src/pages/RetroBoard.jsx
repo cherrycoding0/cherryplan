@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { syncRetroBoard } from '../utils/notionSync'
+import { useState, useMemo, useEffect } from 'react'
+import { syncRetroBoard, fetchRetroBoard } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
 
 const TASK_KEY = 'cherryplan_retro-board'
@@ -116,11 +116,16 @@ function Card({ card, colorMap, onDelete, onEdit, isDragging, onDragStart, onDra
 
 export default function TaskBoard() {
   const [cards, setCards]             = useState(load)
-  const [adding, setAdding]           = useState(null)    // colKey | null
-  const [editingId, setEditingId]     = useState(null)    // card.id | null
+  const [adding, setAdding]           = useState(null)
+  const [editingId, setEditingId]     = useState(null)
   const [filterCat, setFilterCat]     = useState('all')
   const [dragId, setDragId]           = useState(null)
   const [dragOverCol, setDragOverCol] = useState(null)
+  const [notionSample, setNotionSample] = useState([])
+
+  useEffect(() => {
+    if (cards.length === 0) fetchRetroBoard().then(setNotionSample)
+  }, [])
 
   const allCategories = useMemo(
     () => [...new Set(cards.map((c) => c.category).filter(Boolean))].sort(),
@@ -255,6 +260,14 @@ export default function TaskBoard() {
 
               {/* 카드 목록 */}
               <div className={`flex flex-col gap-2 min-h-[80px] rounded-2xl p-2 transition-all duration-150 ${isOver ? 'bg-blue-50' : ''}`}>
+                {cards.length === 0 && notionSample.filter((c) => c.column === key).map((card) => (
+                  <div key={card.id} className="bg-white rounded-xl shadow-sm p-3 flex flex-col gap-1.5 opacity-70">
+                    <p className="text-sm text-[#1A1A2E] leading-snug">{card.text}</p>
+                    {card.category && (
+                      <span className="self-start text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">{card.category}</span>
+                    )}
+                  </div>
+                ))}
                 {colCards.map((card) =>
                   editingId === card.id ? (
                     <CardForm
@@ -310,7 +323,7 @@ export default function TaskBoard() {
       </div>
 
       {/* 빈 상태 */}
-      {cards.length === 0 && (
+      {cards.length === 0 && notionSample.length === 0 && (
         <div className="text-center py-12 text-gray-400">
           <p className="text-4xl mb-3">📋</p>
           <p className="text-sm">각 열의 <strong>+ 카드 추가</strong>를 눌러 할 일을 등록해요</p>

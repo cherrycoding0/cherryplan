@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from 'react'
-import { syncMenu } from '../utils/notionSync'
+import { useState, useRef, useCallback, useEffect } from 'react'
+import { syncMenu, fetchMenu } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
 
 const MENU_KEY = 'cherryplan_menu-picker'
@@ -49,13 +49,18 @@ function formatTime(iso) {
 }
 
 export default function MenuPicker() {
-  const [category,  setCategory]  = useState('all')
-  const [situation, setSituation] = useState('all')
-  const [spinning,  setSpinning]  = useState(false)
-  const [displayed, setDisplayed] = useState('?')
-  const [result,    setResult]    = useState(null)   // { menu, category, situation, pickedAt }
-  const [history,   setHistory]   = useState(loadHistory)
+  const [category,     setCategory]     = useState('all')
+  const [situation,    setSituation]    = useState('all')
+  const [spinning,     setSpinning]     = useState(false)
+  const [displayed,    setDisplayed]    = useState('?')
+  const [result,       setResult]       = useState(null)
+  const [history,      setHistory]      = useState(loadHistory)
+  const [notionSample, setNotionSample] = useState([])
   const spinTimer = useRef(null)
+
+  useEffect(() => {
+    if (history.length === 0) fetchMenu().then(setNotionSample)
+  }, [])
 
   const pool = category === 'all' ? ALL_MENUS : MENUS[category]
 
@@ -198,19 +203,21 @@ export default function MenuPicker() {
       </div>
 
       {/* 최근 기록 */}
-      {history.length > 0 && (
+      {(history.length > 0 || notionSample.length > 0) && (
         <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h2 className="font-bold text-[#1A1A2E]">최근 선택 기록</h2>
-            <button
-              onClick={handleClearHistory}
-              className="text-xs text-gray-300 hover:text-red-400 transition-colors"
-            >
-              전체 삭제
-            </button>
+            {history.length > 0 && (
+              <button onClick={handleClearHistory} className="text-xs text-gray-300 hover:text-red-400 transition-colors">
+                전체 삭제
+              </button>
+            )}
           </div>
+          {history.length === 0 && notionSample.length > 0 && (
+            <p className="text-xs text-gray-400">📖 예시 데이터 · 메뉴를 고르면 내 기록이 표시돼요</p>
+          )}
           <ul className="flex flex-col gap-2 max-h-48 overflow-y-auto">
-            {history.map((h) => (
+            {(history.length > 0 ? history : notionSample).map((h) => (
               <li key={h.id} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-[#1A1A2E]">{h.menu}</span>
