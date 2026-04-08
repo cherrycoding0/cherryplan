@@ -9,7 +9,7 @@ export const NOTION_DB = {
   habit:      '5c073afed9fe447fa15f1e1b3296b3ba',
   budget:     'f48a5fa8d5b54a36bc0bcd7567d57725',
   aiDiary:    '7e49ec25746f487ab6e15023339e8100',
-  movieLog:   'NOTION_MOVIE_DB_ID',
+  movieLog:   import.meta.env.VITE_NOTION_MOVIE_DB_ID || '',
 }
 
 async function createPage(databaseId, properties) {
@@ -365,8 +365,8 @@ function buildMovieProps(item) {
 }
 
 export async function syncMovieLog(items) {
-  if (!NOTION_DB.movieLog || NOTION_DB.movieLog === 'NOTION_MOVIE_DB_ID') {
-    throw new Error('Notion 영화/드라마 DB ID가 설정되지 않았어요. notionSync.js의 NOTION_DB.movieLog를 채워주세요.')
+  if (!NOTION_DB.movieLog) {
+    throw new Error('Notion 영화/드라마 DB ID가 설정되지 않았어요. .env에 VITE_NOTION_MOVIE_DB_ID를 추가해주세요.')
   }
   return syncItems({
     items,
