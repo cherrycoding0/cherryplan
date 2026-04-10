@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { syncHabit, fetchHabit } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
+import DevDiarySection from '../components/DevDiarySection'
 
 const HABIT_KEY = 'cherryplan_habit-tracker'
 
@@ -395,6 +396,15 @@ export default function HabitTracker() {
           </div>
         )
       )}
+      <DevDiarySection
+        devDiaryUrl="https://www.notion.so/333bb3574f30818fb08fc4d51975f1b"
+        prompts={[
+          `습관 트래커(HabitTracker.jsx)를 만들어줘.
+습관 추가/삭제, 매일 체크, 연속 달성 스트릭 자동 계산.
+최근 30일 히트맵 표시 (달성 = 체리 핑크).
+localStorage cherryplan_habit-tracker 저장.`,
+        ]}
+      />
     </div>
   )
 }

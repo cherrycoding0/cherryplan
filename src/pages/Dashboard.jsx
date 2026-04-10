@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import DevDiarySection from '../components/DevDiarySection'
 import {
   Chart as ChartJS,
   CategoryScale, LinearScale,
@@ -550,6 +551,16 @@ export default function Dashboard() {
           <HabitLineChart />
         </div>
       </div>
+      <DevDiarySection
+        devDiaryUrl="https://www.notion.so/33ebb3574f3081898df8cf4d51975f1b"
+        prompts={[
+          `통합 대시보드(Dashboard.jsx)를 만들어줘.
+각 앱의 localStorage 데이터를 읽어 요약 위젯 카드로 표시.
+Chart.js Bar(포모도로 주간 집중) / Doughnut(지출 카테고리) / Line(습관 달성률 7일) 차트 3종.
+외부 라이브러리 없이 데이터 파싱은 커스텀 훅으로 분리.
+데이터 없으면 "아직 데이터 없어요 🍒" 표시.`,
+        ]}
+      />
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { syncMovieLog } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
 import MovieModal from '../components/MovieModal'
+import DevDiarySection from '../components/DevDiarySection'
 
 // TMDB API 검색 비활성화 시 목업 데이터 사용
 const USE_MOCK = false
@@ -295,6 +296,16 @@ export default function MovieLog() {
           onDelete={deleteItem}
         />
       )}
+      <DevDiarySection
+        devDiaryUrl="https://www.notion.so/33ebb3574f3081b18eaadf0d6329398e"
+        prompts={[
+          `기존 MenuPicker.jsx를 MovieLog.jsx로 교체해줘.
+TMDB /search/multi API 실시간 검색, debounce 300ms.
+보고싶어요 / 보는중 / 봤어요 상태 3종, 별점 1~5, 감상 메모.
+poster_path null 체크 후 이모지 플레이스홀더.
+localStorage cherryplan_movie-log 저장. Notion 동기화.`,
+        ]}
+      />
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
 import { syncBudget, fetchBudget } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
+import DevDiarySection from '../components/DevDiarySection'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -321,6 +322,16 @@ export default function Budget() {
           <p className="text-sm">{m}월 내역이 없어요</p>
         </div>
       )}
+      <DevDiarySection
+        devDiaryUrl="https://www.notion.so/334bb3574f30810f91b5f320cb4c3bea"
+        prompts={[
+          `가계부 앱(Budget.jsx)을 만들어줘.
+수입/지출 입력, 카테고리별 분류, 월별 집계.
+Chart.js Doughnut 차트로 카테고리 비율 시각화.
+이전/다음 달 이동, 수입-지출 합계 표시.
+localStorage cherryplan_budget 저장.`,
+        ]}
+      />
     </div>
   )
 }

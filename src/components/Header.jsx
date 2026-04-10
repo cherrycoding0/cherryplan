@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { apps } from '../data/apps'
 
@@ -19,6 +20,7 @@ function GitHubIcon() {
 export default function Header() {
   const location = useLocation()
   const navigate = useNavigate()
+  const [mobileOpen, setMobileOpen] = useState(false)
   const isHome = location.pathname === '/'
   const currentApp = apps.find((a) => a.path === location.pathname)
 
@@ -46,18 +48,27 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* 우측: 개발 일지 + GitHub */}
+        {/* 우측 */}
         <div className="flex items-center gap-3">
+          {/* 대시보드 링크 — 데스크톱 */}
+          <Link
+            to="/dashboard"
+            className="hidden sm:flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-[#FF6B8A] transition-colors border border-gray-200 hover:border-[#FF6B8A] px-2.5 py-1 rounded-full"
+          >
+            📊 대시보드
+          </Link>
+
           {currentApp?.devDiary && (
             <a
               href={currentApp.devDiary}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs font-semibold text-gray-400 hover:text-[#FF6B8A] transition-colors border border-gray-200 hover:border-[#FF6B8A] px-2.5 py-1 rounded-full"
+              className="hidden sm:flex items-center text-xs font-semibold text-gray-400 hover:text-[#FF6B8A] transition-colors border border-gray-200 hover:border-[#FF6B8A] px-2.5 py-1 rounded-full"
             >
               📝 개발 일지
             </a>
           )}
+
           <a
             href="https://github.com/cherrycoding0/cherryplan"
             target="_blank"
@@ -67,8 +78,43 @@ export default function Header() {
           >
             <GitHubIcon />
           </a>
+
+          {/* 햄버거 — 모바일 */}
+          <button
+            onClick={() => setMobileOpen((v) => !v)}
+            className="sm:hidden flex flex-col gap-1 p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="메뉴"
+          >
+            <span className={`block w-5 h-0.5 bg-gray-500 transition-transform origin-center ${mobileOpen ? 'translate-y-1.5 rotate-45' : ''}`} />
+            <span className={`block w-5 h-0.5 bg-gray-500 transition-opacity ${mobileOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-5 h-0.5 bg-gray-500 transition-transform origin-center ${mobileOpen ? '-translate-y-1.5 -rotate-45' : ''}`} />
+          </button>
         </div>
       </div>
+
+      {/* 모바일 드롭다운 */}
+      {mobileOpen && (
+        <div className="sm:hidden border-t border-pink-100 bg-white/95 px-4 py-3 flex flex-col gap-2">
+          <Link
+            to="/dashboard"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#FF6B8A] transition-colors py-1.5"
+          >
+            📊 대시보드
+          </Link>
+          {currentApp?.devDiary && (
+            <a
+              href={currentApp.devDiary}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#FF6B8A] transition-colors py-1.5"
+            >
+              📝 개발 일지
+            </a>
+          )}
+        </div>
+      )}
     </header>
   )
 }

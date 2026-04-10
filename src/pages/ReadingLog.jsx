@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { syncReadingLog, fetchReadingLog } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
+import DevDiarySection from '../components/DevDiarySection'
 
 const STORAGE_KEY = 'cherryplan_reading-log'
 const API_KEY = import.meta.env.VITE_ALADIN_API_KEY
@@ -485,6 +486,16 @@ export default function ReadingLog() {
           onClose={() => setModal(null)}
         />
       )}
+      <DevDiarySection
+        devDiaryUrl="https://www.notion.so/333bb3574f3081f29974e4d7d968c227"
+        prompts={[
+          `독서 기록 앱(ReadingLog.jsx)을 만들어줘.
+알라딘 API로 책 검색, 읽고 싶음 / 읽는 중 / 완독 상태 관리.
+별점 1~5, 진행률 슬라이더, 감상 메모.
+localStorage cherryplan_reading-log 저장.
+CherryPlan 디자인 시스템 통일.`,
+        ]}
+      />
     </div>
   )
 }

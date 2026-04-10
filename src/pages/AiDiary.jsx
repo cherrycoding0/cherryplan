@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { syncAiDiary, NOTION_DB } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
+import DevDiarySection from '../components/DevDiarySection'
 
 // dev: USE_MOCK=true 로 설정하면 Claude API 호출 없이 목업 응답 반환
 const USE_MOCK = false
@@ -410,6 +411,15 @@ export default function AiDiary() {
           onCancel={() => setShowModal(false)}
         />
       )}
+      <DevDiarySection
+        prompts={[
+          `AI 일기 도우미(AiDiary.jsx)를 완성해줘.
+Claude Haiku API로 감정 분석 / 긍정적 리프레이밍 / 내일을 위한 한 마디 피드백 생성.
+브라우저 직접 호출 시 CORS → anthropic-dangerous-direct-browser-access: true 헤더 추가.
+AI 응답을 JSON으로 강제하는 프롬프트 작성 + regex로 JSON 파싱.
+USE_MOCK 상수로 목업/실API 분기. Notion 동기화.`,
+        ]}
+      />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { syncMoodTracker } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
+import DevDiarySection from '../components/DevDiarySection'
 
 const USE_MOCK = false
 const LS_KEY = 'cherryplan_mood-tracker'
@@ -381,6 +382,16 @@ export default function MoodTracker() {
           ))}
         </div>
       )}
+      <DevDiarySection
+        prompts={[
+          `무드 트래커 앱(MoodTracker.jsx)을 만들어줘.
+기분 이모지 5종(좋아요/보통/별로/힘들어요/화나요) 선택.
+메모 입력 후 Claude Haiku API로 위로+동기부여 한 마디 생성.
+AI 일기 localStorage에서 최근 감정 키워드 추출해 프롬프트에 주입.
+탭 3종: 오늘 기록 / 달력(직접 구현) / 기록 리스트.
+localStorage cherryplan_mood-tracker 저장.`,
+        ]}
+      />
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import DevDiarySection from '../components/DevDiarySection'
 import { usePomodoroContext, DEFAULT_MINS } from '../context/PomodoroContext'
 import { syncPomodoro, fetchPomodoro } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
@@ -349,6 +350,16 @@ export default function Pomodoro() {
           </span>
         </div>
       )}
+      <DevDiarySection
+        devDiaryUrl="https://www.notion.so/333bb3574f308113ac67e9ae38f29971"
+        prompts={[
+          `포모도로 타이머 앱(Pomodoro.jsx)을 만들어줘.
+집중 25분 / 휴식 5분 / 긴 휴식 15분. 분 단위 커스텀 설정.
+세션 완료 시 localStorage cherryplan_pomodoro 저장.
+4세션마다 긴 휴식 자동 전환. 브라우저 알림.
+전역 플로팅 미니 타이머 (다른 앱에서도 보임).`,
+        ]}
+      />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { syncRetroBoard, fetchRetroBoard } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
+import DevDiarySection from '../components/DevDiarySection'
 
 const TASK_KEY = 'cherryplan_retro-board'
 
@@ -330,6 +331,16 @@ export default function TaskBoard() {
           <p className="text-xs mt-2 text-gray-300">카드를 드래그해서 열 사이를 이동할 수 있어요</p>
         </div>
       )}
+      <DevDiarySection
+        devDiaryUrl="https://www.notion.so/4c5905c527e24951b55b1bc360576888"
+        prompts={[
+          `태스크 보드(RetroBoard.jsx)를 만들어줘.
+해야할 일 / 하는 중 / 완료 3칸 칸반 보드.
+카드 드래그앤드롭으로 열 이동.
+카테고리별 색상 자동 배정 (6색 팔레트 순환).
+localStorage cherryplan_retro-board 저장.`,
+        ]}
+      />
     </div>
   )
 }
