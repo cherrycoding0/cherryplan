@@ -516,9 +516,20 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10 flex flex-col gap-8">
-      <div>
-        <h1 className="text-2xl font-extrabold text-[#1A1A2E]">📊 통합 대시보드</h1>
-        <p className="text-gray-400 text-sm mt-1">{today} · 모든 앱의 요약을 한눈에</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-[#1A1A2E]">📊 통합 대시보드</h1>
+          <p className="text-gray-400 text-sm mt-1">{today} · 모든 앱의 요약을 한눈에</p>
+        </div>
+        <a
+          href="https://www.notion.so/33ebb3574f3081898df8cf4d51975f1b"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-all whitespace-nowrap"
+          style={{ backgroundColor: '#F5F5F5', color: '#555', borderColor: '#E0E0E0' }}
+        >
+          ↗ 📝 개발일지 열기
+        </a>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
