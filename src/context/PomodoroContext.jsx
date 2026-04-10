@@ -78,7 +78,7 @@ export function PomodoroProvider({ children }) {
       return updated
     })
 
-    if (Notification.permission === 'granted') {
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
       new Notification('🍒 CherryPlan', {
         body: completedMode === 'focus'
           ? '집중 완료! 잠깐 쉬어가세요 ☕'
@@ -121,7 +121,7 @@ export function PomodoroProvider({ children }) {
   }, [isRunning, mode, clearTimer, completeSession, currentTask])
 
   useEffect(() => {
-    if (Notification.permission === 'default') Notification.requestPermission()
+    if (typeof Notification !== 'undefined' && Notification.permission === 'default') Notification.requestPermission()
   }, [])
 
   useEffect(() => {
