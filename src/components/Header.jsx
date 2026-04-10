@@ -58,7 +58,7 @@ export default function Header() {
             📊 대시보드
           </Link>
 
-          {currentApp?.devDiary && (
+          {/* {currentApp?.devDiary && (
             <a
               href={currentApp.devDiary}
               target="_blank"
@@ -67,7 +67,7 @@ export default function Header() {
             >
               📝 개발 일지
             </a>
-          )}
+          )} */}
 
           <a
             href="https://github.com/cherrycoding0/cherryplan"
@@ -102,7 +102,7 @@ export default function Header() {
           >
             📊 대시보드
           </Link>
-          {currentApp?.devDiary && (
+          {/* {currentApp?.devDiary && (
             <a
               href={currentApp.devDiary}
               target="_blank"
@@ -112,7 +112,7 @@ export default function Header() {
             >
               📝 개발 일지
             </a>
-          )}
+          )} */}
         </div>
       )}
     </header>

@@ -19,7 +19,7 @@ export default function DevDiarySection({ prompts = [], devDiaryUrl }) {
         </pre>
       ))}
 
-      <a
+      {/* <a
         href={devDiaryUrl || FULL_DIARY}
         target="_blank"
         rel="noopener noreferrer"
@@ -27,7 +27,7 @@ export default function DevDiarySection({ prompts = [], devDiaryUrl }) {
         style={{ background: 'linear-gradient(to right, #FF6B8A, #E84393)' }}
       >
         전체 개발일지 보기 →
-      </a>
+      </a> */}
     </div>
   )
 }
