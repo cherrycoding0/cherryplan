@@ -9,7 +9,74 @@ export const NOTION_DB = {
   habit:      '5c073afed9fe447fa15f1e1b3296b3ba',
   budget:     'f48a5fa8d5b54a36bc0bcd7567d57725',
   aiDiary:    '7e49ec25746f487ab6e15023339e8100',
-  movieLog:   import.meta.env.VITE_NOTION_MOVIE_DB_ID || '',
+  movieLog:    import.meta.env.VITE_NOTION_MOVIE_DB_ID || '',
+  moodTracker: import.meta.env.VITE_NOTION_MOOD_DB_ID || '',
+}
+
+// ── DB 자동 생성 헬퍼 ──────────────────────────────────────────
+const LS_DB_IDS = 'cherryplan_notion_db_ids'
+
+function loadDbIds() {
+  try { return JSON.parse(localStorage.getItem(LS_DB_IDS)) || {} } catch { return {} }
+}
+function saveDbId(key, id) {
+  const map = loadDbIds()
+  map[key] = id
+  localStorage.setItem(LS_DB_IDS, JSON.stringify(map))
+}
+
+// Notion에서 CherryPlan 페이지 검색, 없으면 env var 사용
+async function findParentPageId() {
+  const envId = import.meta.env.VITE_NOTION_PARENT_PAGE_ID
+  if (envId) return envId
+  try {
+    const res = await fetch(`${BASE}/search`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: 'CherryPlan',
+        filter: { value: 'page', property: 'object' },
+        page_size: 1,
+      }),
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.results?.[0]?.id || null
+  } catch { return null }
+}
+
+async function createDatabase(parentPageId, title, properties) {
+  const res = await fetch(`${BASE}/databases`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      parent: { type: 'page_id', page_id: parentPageId },
+      title: [{ type: 'text', text: { content: title } }],
+      properties,
+    }),
+  })
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`DB 생성 실패 (${res.status}): ${body}`)
+  }
+  return res.json()
+}
+
+// NOTION_DB → localStorage 캐시 → 자동 생성 순으로 DB ID 확보
+async function getOrCreateDbId(dbKey, title, schema) {
+  if (NOTION_DB[dbKey]) return NOTION_DB[dbKey]
+  const cached = loadDbIds()[dbKey]
+  if (cached) return cached
+  const parentId = await findParentPageId()
+  if (!parentId) {
+    throw new Error(
+      `Notion DB를 자동으로 만들려면 Notion에 'CherryPlan' 페이지가 필요해요. ` +
+      `없다면 .env에 VITE_NOTION_PARENT_PAGE_ID를 추가해주세요.`
+    )
+  }
+  const db = await createDatabase(parentId, title, schema)
+  saveDbId(dbKey, db.id)
+  return db.id
 }
 
 async function createPage(databaseId, properties) {
@@ -365,15 +432,35 @@ function buildMovieProps(item) {
 }
 
 export async function syncMovieLog(items) {
-  if (!NOTION_DB.movieLog) {
-    throw new Error('Notion 영화/드라마 DB ID가 설정되지 않았어요. .env에 VITE_NOTION_MOVIE_DB_ID를 추가해주세요.')
-  }
-  return syncItems({
-    items,
-    dbId: NOTION_DB.movieLog,
-    buildProps: buildMovieProps,
-    getTitle: (i) => i.title,
+  const dbId = await getOrCreateDbId('movieLog', '🎬 영화/드라마 기록', {
+    '제목':  { title: {} },
+    '타입':  { select: { options: [{ name: '영화' }, { name: '드라마' }] } },
+    '상태':  { select: { options: [{ name: '보고싶어요' }, { name: '보는중' }, { name: '봤어요' }] } },
+    '별점':  { number: {} },
+    '감상':  { rich_text: {} },
+    '완료일': { date: {} },
   })
+  return syncItems({ items, dbId, buildProps: buildMovieProps, getTitle: (i) => i.title })
+}
+
+// ── 무드 트래커 ────────────────────────────────────────────────
+function buildMoodProps(entry) {
+  return {
+    '기분이모지': { title:     [{ text: { content: `${entry.mood} ${entry.moodLabel}` } }] },
+    '날짜':       { date:      { start: entry.date } },
+    '메모':       { rich_text: [{ text: { content: entry.memo || '' } }] },
+    'Claude메시지': { rich_text: [{ text: { content: entry.claudeMessage || '' } }] },
+  }
+}
+
+export async function syncMoodTracker(entries) {
+  const dbId = await getOrCreateDbId('moodTracker', '😌 무드 트래커', {
+    '기분이모지':   { title: {} },
+    '날짜':         { date: {} },
+    '메모':         { rich_text: {} },
+    'Claude메시지': { rich_text: {} },
+  })
+  return syncItems({ items: entries, dbId, buildProps: buildMoodProps, getTitle: (e) => e.date })
 }
 
 export async function syncAiDiary(entries) {

@@ -10,6 +10,8 @@ import RetroBoard from './pages/RetroBoard'
 import HabitTracker from './pages/HabitTracker'
 import Budget from './pages/Budget'
 import AiDiary from './pages/AiDiary'
+import MoodTracker from './pages/MoodTracker'
+import Dashboard from './pages/Dashboard'
 import { PomodoroProvider, usePomodoroContext } from './context/PomodoroContext'
 
 function formatTime(seconds) {
@@ -91,6 +93,8 @@ function AnimatedRoutes() {
         <Route path="/habit-tracker" element={<HabitTracker />} />
         <Route path="/budget" element={<Budget />} />
         <Route path="/ai-diary" element={<AiDiary />} />
+        <Route path="/mood-tracker" element={<MoodTracker />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </main>
   )
