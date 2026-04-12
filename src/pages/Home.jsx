@@ -72,7 +72,7 @@ export default function Home() {
       {/* 통계 섹션 */}
       <section className="flex flex-wrap justify-center gap-6 py-8 border-t border-pink-100">
         {[
-          { label: '총 앱 수', value: '7개' },
+          { label: '총 앱 수', value: '9개' },
           { label: '사용 도구', value: 'Claude Code' },
           { label: '배포 플랫폼', value: 'Netlify' },
         ].map(({ label, value }) => (

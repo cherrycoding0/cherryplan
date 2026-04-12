@@ -1,10 +1,12 @@
 # 🍒 CherryPlan — 프로젝트 가이드
 
 ## 프로젝트 개요
-바이브코딩으로 만든 7개 미니앱을 모아둔 개인 포트폴리오 허브.
+
+바이브코딩으로 만든 9개 미니앱을 모아둔 개인 포트폴리오 허브.
 Claude Code로 7일 만에 완성. Netlify에 배포.
 
 ## 기술 스택
+
 - React 18 + Vite 5
 - React Router v6
 - Tailwind CSS v3
@@ -13,22 +15,25 @@ Claude Code로 7일 만에 완성. Netlify에 배포.
 ## 디자인 시스템
 
 ### 컬러
-| 이름 | 헥스 | 용도 |
-|------|------|------|
-| 체리 핑크 | `#FF6B8A` | 메인 강조, 로고, 버튼 |
-| 딥 체리 | `#E84393` | 그라디언트 끝, 태그 텍스트 |
-| 소프트 핑크 | `#FFE4EC` | 태그 배경, 카드 강조 |
-| 배경 | `#FAFAFA` | 페이지 배경 |
-| 텍스트 | `#1A1A2E` | 본문 텍스트 |
-| 카드 배경 | `#FFFFFF` | 카드 흰 배경 |
+
+| 이름        | 헥스      | 용도                       |
+| ----------- | --------- | -------------------------- |
+| 체리 핑크   | `#FF6B8A` | 메인 강조, 로고, 버튼      |
+| 딥 체리     | `#E84393` | 그라디언트 끝, 태그 텍스트 |
+| 소프트 핑크 | `#FFE4EC` | 태그 배경, 카드 강조       |
+| 배경        | `#FAFAFA` | 페이지 배경                |
+| 텍스트      | `#1A1A2E` | 본문 텍스트                |
+| 카드 배경   | `#FFFFFF` | 카드 흰 배경               |
 
 ### 규칙
+
 - `rounded-2xl` 기본 (버튼은 `rounded-full`)
 - 카드: `shadow-md hover:shadow-xl transition-all`
 - hover 이동: `hover:-translate-y-1`
 - 폰트: `font-family: 'Pretendard', sans-serif` (index.css에 전역 적용)
 
 ## 파일 구조
+
 ```
 src/
 ├── components/
@@ -72,24 +77,30 @@ src/
 ```
 
 ## localStorage 키 네이밍 규칙
+
 ```
 cherryplan_[앱-id]
 ```
+
 예시:
+
 - `cherryplan_reading-log`
 - `cherryplan_pomodoro`
 - `cherryplan_habit-tracker`
 
 ## 환경 변수
+
 ```
 VITE_ANTHROPIC_API_KEY=   # AI 일기 도우미에서 사용
 VITE_TMDB_API_KEY=        # 영화/드라마 기록에서 사용
 VITE_SYNC_PASSWORD=       # Notion 연동 동기화 비밀번호
 NOTION_TOKEN=             # Notion API 토큰
 ```
+
 `.env.example` 참고. 실제 키는 `.env` 파일에 (gitignore됨).
 
 ## 절대 하지 말 것
+
 - ❌ 외부 DB 연결 (Firebase, Supabase 등) — localStorage만 사용
 - ❌ 로그인/인증 구현
 - ❌ 단일 컴포넌트 500줄 초과 — 분리할 것
@@ -97,6 +108,7 @@ NOTION_TOKEN=             # Notion API 토큰
 - ❌ `console.log` 프로덕션 코드에 남기기
 
 ## 배포
+
 - 플랫폼: Netlify
 - 배포 URL: https://cherryplan.netlify.app/
 - 빌드 커맨드: `npm run build`
@@ -104,6 +116,7 @@ NOTION_TOKEN=             # Notion API 토큰
 - SPA 리다이렉트: `public/_redirects` 파일에 `/* /index.html 200` 추가 필요
 
 ## 후원 버튼
+
 - GitHub Sponsors 승인 대기 중 (https://github.com/sponsors/cherrycoding0)
 - ❌ Buy Me a Coffee 사용 안 함 (한국 환경에 맞지 않음)
 - ✅ 승인되면 Footer.jsx에 GitHub Sponsors 버튼 추가 예정
@@ -119,6 +132,7 @@ NOTION_TOKEN=             # Notion API 토큰
 > 나중에 "CherryPlan 제작기" 2편 아티클로 만들 예정.
 
 ### 기록 형식
+
 ```
 ### [날짜] [작업한 것]
 - **뭘 만들었나:** 한 줄 요약
@@ -131,6 +145,7 @@ NOTION_TOKEN=             # Notion API 토큰
 ---
 
 ### ✅ 완성된 앱 기록 (요약)
+
 - 📚 독서 기록 — Notion 연동, 개발 일지 등록 완료
 - 🍽️ 오늘의 메뉴 — Notion 연동, 개발 일지 등록 완료
 - ⏱️ 포모도로 타이머 — Notion 연동, 개발 일지 등록 완료
@@ -143,6 +158,7 @@ NOTION_TOKEN=             # Notion API 토큰
 ### 🔜 남은 작업 기록 (작업 완료 시 채우기)
 
 ### [ ] 🩷 GitHub Sponsors 버튼 (승인 후 작업)
+
 - **뭘 만들었나:**
 - **쓴 프롬프트:**
 - **막힌 부분:**
@@ -150,6 +166,7 @@ NOTION_TOKEN=             # Notion API 토큰
 - **결과:**
 
 ### [2026-04-07] 🤖 AI 일기 도우미
+
 - **뭘 만들었나:** 일기 텍스트 입력 → Claude Haiku API 호출 → 감정 분석 / 긍정적 리프레이밍 / 내일을 위한 한 마디 피드백 카드 표시. localStorage 저장 + Notion 동기화 지원.
 - **쓴 프롬프트:** "AI 일기 도우미 앱(AiDiary.jsx)을 완성해줘. Claude API로 감정 분석·긍정적 리프레이밍·내일을 위한 한 마디 피드백 생성. USE_MOCK=true일 때 목업 응답. Notion 연동. CherryPlan 디자인 시스템 통일."
 - **막힌 부분:** 브라우저에서 Anthropic API 직접 호출 시 CORS 정책 → `anthropic-dangerous-direct-browser-access: true` 헤더 필요. Notion AI 일기 DB는 별도 생성 필요(ID 플레이스홀더로 처리).
@@ -157,6 +174,7 @@ NOTION_TOKEN=             # Notion API 토큰
 - **결과:** textarea 입력 → 로딩("✨ Claude가 읽고 있어요...") → 체리 핑크 피드백 카드 표시. 과거 일기 아코디언 목록. 삭제 기능. Notion 동기화 버튼(DB ID 미설정 시 안내 메시지 표시).
 
 ### [2026-04-08] 🎬 영화/드라마 기록
+
 - **뭘 만들었나:** TMDB API 연동 영화/드라마 기록 앱. 실시간 검색 드롭다운, 상태 관리(보고싶어요/보는중/봤어요), 별점 1~5점, 감상 메모, Notion 연동.
 - **쓴 프롬프트:** "기존 MenuPicker.jsx를 MovieLog.jsx로 교체. TMDB /search/multi API, 상태 배지 3종, 별점 ⭐, 감상 메모, localStorage cherryplan_movie-log, Notion 연동."
 - **막힌 부분:** TMDB 포스터 이미지 없는 경우 처리, debounce 검색 구현
@@ -164,6 +182,7 @@ NOTION_TOKEN=             # Notion API 토큰
 - **결과:** 검색 → 드롭다운 선택 → 카드 추가 → 모달에서 상태/별점/메모 관리. Notion 동기화 버튼.
 
 ### [2026-04-09] 😌 무드 트래커
+
 - **뭘 만들었나:** 기분 이모지 5종 선택 + 메모 → Claude Haiku API 위로/동기부여 한 마디. AI 일기 감정 데이터 연동. 달력 뷰 + 리스트 뷰. Notion 동기화.
 - **쓴 프롬프트:** "무드 트래커 앱(MoodTracker.jsx) 구현. AiDiary.jsx 패턴 동일. 기분 이모지 5종, 메모, Claude API 위로 메시지. 달력 뷰(외부 라이브러리 없이 직접 구현), 기록 리스트 아코디언. AI 일기 localStorage 연동. Notion 동기화."
 - **막힌 부분:** 없음
@@ -171,6 +190,7 @@ NOTION_TOKEN=             # Notion API 토큰
 - **결과:** 탭 3종(오늘 기록/달력/리스트). 이모지 선택 → Claude 위로 카드. 달력 셀 클릭 시 모달. 수정/삭제. Notion 동기화(VITE_NOTION_MOOD_DB_ID 환경변수).
 
 ### [ ] 📊 통합 대시보드
+
 - **뭘 만들었나:**
 - **쓴 프롬프트:**
 - **막힌 부분:**
@@ -182,6 +202,7 @@ NOTION_TOKEN=             # Notion API 토큰
 핵심만. 군더더기 없이.
 
 ### 제거할 것
+
 - 인사말 금지 — "안녕하세요", "물론이죠", "좋은 질문이에요" 류 전부
 - 헷징 금지 — "~할 수도 있어요", "~을 고려해보시는 게 좋을 것 같아요" 류
 - 공감형 도입 금지 — "그렇군요!", "맞아요, 많이들 헷갈리시죠" 류
@@ -189,6 +210,7 @@ NOTION_TOKEN=             # Notion API 토큰
 - 불필요한 조사·연결어 최소화
 
 ### 유지할 것
+
 - 코드 블록 — 정확하게 그대로
 - 기술 용어 — 변경 금지 (useState, useEffect, props 등)
 - 에러 메시지 — 원문 그대로 인용
@@ -196,13 +218,16 @@ NOTION_TOKEN=             # Notion API 토큰
 - 번호·이모지 리스트 — 핵심 나열 시 유지
 
 ### 응답 형식
+
 - 결론 먼저. 이유는 뒤에.
 - 문장은 짧게 끊기.
 - 설명 필요하면 코드로.
 
 ### 예시
+
 ❌ "안녕하세요! 말씀하신 부분은 React의 렌더링 사이클과 관련이 있는데요, 이런 경우엔 useMemo를 사용하시는 걸 고려해보시면 좋을 것 같아요."
 ✅ "useMemo 쓰세요. 매 렌더마다 새 객체 생성 중."
 
 ### 해제
+
 "일반 모드" 또는 "normal mode" 입력 시 해제.
