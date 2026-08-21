@@ -1,6 +1,6 @@
 # 🍒 CherryPlan
 
-> 바이브코딩으로 만든 미니앱 모음 포트폴리오 — Claude로 기획부터 배포까지
+> 기획부터 배포까지, AI와 함께 만든 미니앱 포트폴리오
 
 ## 소개
 
@@ -34,7 +34,7 @@ API 키는 **서버(Netlify Functions)에서만** 사용하므로 `VITE_` 접두
 
 | 변수 | 용도 | 노출 |
 |------|------|------|
-| `ANTHROPIC_API_KEY` | AI 일기 / 무드 트래커 | 서버 전용 |
+| `GEMINI_API_KEY` | AI 일기 / 무드 트래커 (Google AI Studio 무료 키) | 서버 전용 |
 | `TMDB_API_KEY` | 영화·드라마 검색 | 서버 전용 |
 | `ALADIN_API_KEY` | 도서 검색 (알라딘 TTBKey) | 서버 전용 |
 | `NOTION_TOKEN` | 노션 동기화 | 서버 전용 |
@@ -66,7 +66,7 @@ API 키는 **서버(Netlify Functions)에서만** 사용하므로 `VITE_` 접두
 - **폰트**: Pretendard (CDN)
 - **데이터 저장**: localStorage
 - **서버리스**: Netlify Functions (API 키 프록시)
-- **AI**: Claude API (Haiku)
+- **AI**: Google Gemini API (2.0 Flash)
 - **배포**: Netlify
 
 ## 프로젝트 구조

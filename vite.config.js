@@ -31,15 +31,7 @@ export default defineConfig(({ mode }) => {
             path.replace(/^\/api\/tmdb/, '/3/search/multi') +
             `&api_key=${env.TMDB_API_KEY}&language=ko-KR`,
         },
-        '/api/anthropic': {
-          target: 'https://api.anthropic.com',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/anthropic/, '/v1/messages'),
-          headers: {
-            'x-api-key': env.ANTHROPIC_API_KEY || '',
-            'anthropic-version': '2023-06-01',
-          },
-        },
+        // /api/anthropic (AI)는 Gemini 프록시 Function을 통하므로 로컬은 `netlify dev`로 실행하세요.
       },
     },
   }
