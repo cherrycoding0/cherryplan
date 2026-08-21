@@ -86,6 +86,20 @@ export default function Home() {
             GitHub @cherrycoding0
           </a>
           <a
+            href="https://cherrycoding0.tistory.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              inline-flex items-center gap-2
+              bg-white text-[#1A1A2E] border border-pink-200
+              px-5 py-2.5 rounded-full
+              text-sm font-semibold
+              hover:border-[#FF6B8A] hover:text-[#FF6B8A] transition-colors duration-200
+            "
+          >
+            ✍️ 개발 블로그
+          </a>
+          <a
             href="https://github.com/sponsors/cherrycoding0"
             target="_blank"
             rel="noopener noreferrer"

@@ -13,6 +13,15 @@ export default function Footer() {
             <span aria-hidden="true">💌</span>
             cherrycoding0@gmail.com
           </a>
+          <a
+            href="https://cherrycoding0.tistory.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 hover:text-[#FF6B8A] transition-colors"
+          >
+            <span aria-hidden="true">✍️</span>
+            개발 블로그
+          </a>
           <p>
             Made with{' '}
             <span className="text-[#FF6B8A]">♥</span>
