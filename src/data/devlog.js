@@ -5,7 +5,7 @@ export const devlog = [
     title: '체리플랜 대규모 정비 — 보안·리브랜딩·프로젝트 확장',
     tags: ['보안', 'UI 리디자인', 'Gemini', '신규 프로젝트'],
     items: [
-      '실전 프로젝트 4개 카드 추가 — 생일 페이지, 왕과 사는 남자 유형 테스트, BND 2025 RECAP, 픽BTI',
+      '실전 프로젝트 4개 카드 추가 — 성호 생일 페이지, 왕과 사는 남자 유형 테스트, BND 2025 RECAP, 픽BTI',
       '전체 코드 점검에서 API 키 클라이언트 노출 구조 발견 → TMDB·알라딘·AI 호출을 전부 Netlify Functions 프록시로 이전 (키는 서버에서만)',
       'AI 백엔드를 Claude API → Gemini API로 전환, npm run dev에서도 AI가 동작하는 로컬 프록시 미들웨어 추가',
       '홈 UI 리디자인 — AI-Native 배지, 핵심 지표 스트립, 실전/연습 섹션 분리, Tech & Tools 섹션',
@@ -13,6 +13,9 @@ export const devlog = [
       'OG 태그 + 공유 썸네일 추가, README 실제 앱 목록과 정합화, 컨택 메일·블로그 링크',
       '상세 페이지 진입 시 맨 위로, 홈 복귀 시 보던 위치로 — 스크롤 복원 구현',
       '트러블슈팅: git add 누락으로 빈 커밋, 브라우저의 301 영구 캐시로 인한 CORS 오류, Gemini 구모델명 404',
+      'Netlify Functions 502 근본 원인 해결 — package.json의 type:module 때문에 CJS 문법 함수가 로드 즉시 죽던 것을 ESM(export const handler)으로 전환',
+      '무드 트래커 크로스 디바이스 동기화 — 노션을 경량 백엔드로 활용해 로컬 ↔ 노션 ↔ 실서버 기록 병합 (같은 날짜는 로컬 우선, 노션 페이지 ID 승계로 중복 방지)',
+      '상단 헤더에 실전/연습 섹션 점프 탭 추가, 개발 일지 페이지(/devlog) 신설',
     ],
   },
 ]
