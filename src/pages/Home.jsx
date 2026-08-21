@@ -1,5 +1,6 @@
 import AppCard from '../components/AppCard'
 import { apps } from '../data/apps'
+import { certs } from '../data/certs'
 
 // ── 기술 & 도구 (카테고리별) ─────────────────────────────
 const TECH_STACK = [
@@ -191,6 +192,31 @@ export default function Home() {
                   </span>
                 ))}
               </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 자격증 · 수료 ── */}
+      <section>
+        <SectionHeader
+          title="📜 Certifications"
+          count={certs.length}
+          desc="배운 걸 위 프로젝트들에 바로 적용했어요"
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {certs.map((c) => (
+            <div
+              key={c.name}
+              className="flex items-center justify-between gap-3 bg-white rounded-2xl shadow-md px-5 py-4 border border-transparent hover:border-pink-100 transition-colors"
+            >
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-[#1A1A2E] truncate">{c.name}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{c.issuer}</p>
+              </div>
+              <span className="text-xs font-semibold text-[#E84393] bg-[#FFE4EC] px-2.5 py-1 rounded-full shrink-0">
+                {c.date}
+              </span>
             </div>
           ))}
         </div>
