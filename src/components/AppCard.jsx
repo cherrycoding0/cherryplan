@@ -2,11 +2,14 @@ import { useNavigate } from 'react-router-dom'
 
 export default function AppCard({ app }) {
   const navigate = useNavigate()
-  const { emoji, name, description, tags, difficulty, path, color, highlight } = app
+  const { emoji, name, description, tags, difficulty, path, color, highlight, external } = app
+
+  const open = () =>
+    external ? window.open(external, '_blank', 'noopener') : navigate(path)
 
   return (
     <article
-      onClick={() => navigate(path)}
+      onClick={open}
       className="
         bg-white rounded-2xl shadow-md hover:shadow-xl
         cursor-pointer overflow-hidden
@@ -16,8 +19,8 @@ export default function AppCard({ app }) {
       "
       role="button"
       tabIndex={0}
-      aria-label={`${name} 앱 열기`}
-      onKeyDown={(e) => e.key === 'Enter' && navigate(path)}
+      aria-label={external ? `${name} 새 탭에서 열기` : `${name} 앱 열기`}
+      onKeyDown={(e) => e.key === 'Enter' && open()}
     >
       {/* 카드 상단 - 컬러 배경 + 이모지 */}
       <div

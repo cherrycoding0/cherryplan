@@ -1,5 +1,17 @@
 export const apps = [
   {
+    id: 'bday-recap',
+    emoji: '🎂',
+    name: '성호 생일 축하 페이지',
+    description: '사진드컵·유형테스트·실시간 롤링페이퍼. 실사용자가 있는 팬 프로젝트',
+    tags: ['Next.js', 'Supabase', 'Realtime', 'AI'],
+    difficulty: '⭐⭐⭐',
+    external: 'https://bday-recap.vercel.app',
+    color: '#FFEFF5',
+    highlight: true,
+    devDiary: '',
+  },
+  {
     id: 'reading-log',
     emoji: '📚',
     name: '독서 기록',
