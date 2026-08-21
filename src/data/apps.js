@@ -12,6 +12,18 @@ export const apps = [
     devDiary: '',
   },
   {
+    id: 'kings-warden',
+    emoji: '👑',
+    name: '왕과 사는 남자 유형 테스트',
+    description: '10문항으로 알아보는 나의 캐릭터 유형. 역사 드라마 테마 성격 테스트',
+    tags: ['Next.js', '유형테스트', 'SEO'],
+    difficulty: '⭐⭐',
+    external: 'https://the-kings-warden2.vercel.app/',
+    color: '#E8EAF6',
+    highlight: true,
+    devDiary: '',
+  },
+  {
     id: 'reading-log',
     emoji: '📚',
     name: '독서 기록',
