@@ -4,7 +4,7 @@ import NotionSyncButton from '../components/NotionSyncButton'
 import DevDiarySection from '../components/DevDiarySection'
 
 const STORAGE_KEY = 'cherryplan_reading-log'
-const API_KEY = import.meta.env.VITE_ALADIN_API_KEY
+// 검색은 서버(Netlify Function /api/aladin)를 통해 호출 — API 키 클라이언트 노출 없음
 
 const STATUS_META = {
   want:    { label: '읽고 싶음', color: '#FF6B8A', bg: '#FFE4EC' },
@@ -117,7 +117,6 @@ function BookModal({ initial, onSave, onClose }) {
     setLoading(true)
     try {
       const params = new URLSearchParams({
-        ttbkey: API_KEY,
         Query: q,
         QueryType: 'Keyword',
         MaxResults: '8',

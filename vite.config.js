@@ -11,7 +11,9 @@ export default defineConfig(({ mode }) => {
         '/api/aladin': {
           target: 'http://www.aladin.co.kr',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/aladin/, '/ttb/api/ItemSearch.aspx'),
+          rewrite: (path) =>
+            path.replace(/^\/api\/aladin/, '/ttb/api/ItemSearch.aspx') +
+            `&ttbkey=${env.ALADIN_API_KEY || ''}`,
         },
         '/api/notion': {
           target: 'https://api.notion.com',
@@ -20,6 +22,22 @@ export default defineConfig(({ mode }) => {
           headers: {
             'Authorization': `Bearer ${env.NOTION_TOKEN}`,
             'Notion-Version': '2022-06-28',
+          },
+        },
+        '/api/tmdb': {
+          target: 'https://api.themoviedb.org',
+          changeOrigin: true,
+          rewrite: (path) =>
+            path.replace(/^\/api\/tmdb/, '/3/search/multi') +
+            `&api_key=${env.TMDB_API_KEY}&language=ko-KR`,
+        },
+        '/api/anthropic': {
+          target: 'https://api.anthropic.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/anthropic/, '/v1/messages'),
+          headers: {
+            'x-api-key': env.ANTHROPIC_API_KEY || '',
+            'anthropic-version': '2023-06-01',
           },
         },
       },

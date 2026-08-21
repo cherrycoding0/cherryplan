@@ -11,6 +11,16 @@
   status = 200
 
 [[redirects]]
+  from = "/api/tmdb"
+  to = "/.netlify/functions/tmdb"
+  status = 200
+
+[[redirects]]
+  from = "/api/anthropic"
+  to = "/.netlify/functions/anthropic"
+  status = 200
+
+[[redirects]]
   from = "/api/notion/*"
   to = "/.netlify/functions/notion-proxy"
   status = 200

@@ -1,5 +1,6 @@
 exports.handler = async (event) => {
   const params = new URLSearchParams(event.queryStringParameters || {})
+  params.set('ttbkey', process.env.ALADIN_API_KEY || '') // 키는 서버에서만 주입
   params.set('output', 'js')
   params.set('Version', '20131101')
 

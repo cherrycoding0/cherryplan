@@ -11,7 +11,7 @@ const SYNC_PW = import.meta.env.VITE_SYNC_PASSWORD || ''
 const SESSION_KEY = 'cherryplan_sync_auth'
 
 function isAuthed() {
-  return !SYNC_PW || sessionStorage.getItem(SESSION_KEY) === 'true'
+  return sessionStorage.getItem(SESSION_KEY) === 'true'
 }
 
 function load() {
@@ -32,19 +32,9 @@ async function callClaude(content) {
     return MOCK_FEEDBACK
   }
 
-  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-  if (!apiKey) {
-    throw new Error('API 키가 설정되지 않았어요. .env 파일에 VITE_ANTHROPIC_API_KEY를 추가해주세요.')
-  }
-
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('/api/anthropic', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 600,
@@ -234,6 +224,11 @@ export default function AiDiary() {
   function handleClick(e) {
     e.preventDefault()
     if (!content.trim() || loading) return
+    // 비밀번호 미설정 시 AI 호출 차단 (공개 배포에서 무단 토큰 소비 방지)
+    if (!SYNC_PW) {
+      setError('AI 기능 비밀번호(VITE_SYNC_PASSWORD)가 설정되지 않았어요')
+      return
+    }
     if (isAuthed()) {
       runFeedback()
     } else {

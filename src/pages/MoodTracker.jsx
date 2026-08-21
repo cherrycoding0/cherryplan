@@ -39,17 +39,9 @@ async function callClaude(mood, memo, keywords) {
     return { message: '오늘도 수고했어요. 어떤 하루였든 여기까지 온 것만으로도 충분해요. 내일은 조금 더 나아질 거예요 🍒' }
   }
 
-  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-  if (!apiKey) throw new Error('API 키가 설정되지 않았어요. .env에 VITE_ANTHROPIC_API_KEY를 추가해주세요.')
-
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('/api/anthropic', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 300,

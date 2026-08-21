@@ -90,7 +90,13 @@ export default function NotionSyncButton({ onSync, disabled = false, label = '�
 
   function handleClick() {
     if (state === 'loading' || disabled) return
-    if (!SYNC_PW || isAuthed()) {
+    // 비밀번호 미설정 시 동기화 비활성 (공개 배포에서 무단 쓰기 방지)
+    if (!SYNC_PW) {
+      setErrMsg('동기화 비밀번호(VITE_SYNC_PASSWORD)가 설정되지 않았어요')
+      setTimeout(() => setErrMsg(''), 4000)
+      return
+    }
+    if (isAuthed()) {
       runSync()
     } else {
       setShowModal(true)

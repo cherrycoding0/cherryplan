@@ -8,7 +8,7 @@ import DevDiarySection from '../components/DevDiarySection'
 const USE_MOCK = false
 
 const LS_KEY = 'cherryplan_movie-log'
-const TMDB_KEY = import.meta.env.VITE_TMDB_API_KEY || ''
+// 검색은 서버(Netlify Function /api/tmdb)를 통해 호출 — API 키 클라이언트 노출 없음
 
 function load() {
   try { return JSON.parse(localStorage.getItem(LS_KEY)) || [] } catch { return [] }
@@ -27,11 +27,8 @@ async function searchTMDB(query) {
     await new Promise((r) => setTimeout(r, 300))
     return MOCK_RESULTS.filter((m) => m.title.toLowerCase().includes(query.toLowerCase()))
   }
-  if (!TMDB_KEY) return []
   try {
-    const res = await fetch(
-      `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_KEY}&language=ko-KR&query=${encodeURIComponent(query)}`
-    )
+    const res = await fetch(`/api/tmdb?query=${encodeURIComponent(query)}`)
     if (!res.ok) return []
     const data = await res.json()
     return (data.results || [])
@@ -210,13 +207,8 @@ export default function MovieLog() {
             value={query}
             onChange={(e) => handleSearch(e.target.value)}
             onFocus={() => results.length > 0 && setShowDropdown(true)}
-            placeholder={
-              !TMDB_KEY && !USE_MOCK
-                ? 'VITE_TMDB_API_KEY를 .env에 추가하면 검색할 수 있어요'
-                : '영화나 드라마를 검색해서 추가해요'
-            }
+            placeholder="영화나 드라마를 검색해서 추가해요"
             className="flex-1 text-sm text-[#1A1A2E] placeholder-gray-300 focus:outline-none bg-transparent"
-            disabled={!TMDB_KEY && !USE_MOCK}
           />
           {searching && <span className="text-xs text-gray-300 animate-pulse">검색중...</span>}
         </div>
