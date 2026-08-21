@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { syncMoodTracker } from '../utils/notionSync'
+import { syncMoodTracker, fetchMoodTracker } from '../utils/notionSync'
 import NotionSyncButton from '../components/NotionSyncButton'
 import DevDiarySection from '../components/DevDiarySection'
 
@@ -179,6 +179,27 @@ export default function MoodTracker() {
   const todayEntry = entries.find(e => e.date === today)
 
   useEffect(() => { save(entries) }, [entries])
+
+  // 노션에 동기화된 기록을 불러와 로컬과 병합 (기기·서버가 달라도 기록 유지)
+  useEffect(() => {
+    fetchMoodTracker().then((remote) => {
+      if (!remote.length) return
+      setEntries((local) => {
+        const byDate = new Map(remote.map((r) => [r.date, r]))
+        // 같은 날짜는 로컬 우선(수정 중일 수 있음), 노션 페이지 ID만 이어받아 중복 생성 방지
+        const merged = local.map((l) => {
+          const r = byDate.get(l.date)
+          if (r) {
+            byDate.delete(l.date)
+            return { ...l, notionId: l.notionId || r.notionId }
+          }
+          return l
+        })
+        // 로컬에 없는 날짜의 노션 기록 추가
+        return [...merged, ...byDate.values()].sort((a, b) => b.date.localeCompare(a.date))
+      })
+    }).catch(() => {}) // 오프라인/미설정 시 조용히 로컬만 사용
+  }, [])
 
   async function handleSave() {
     if (!selectedMood || loading) return

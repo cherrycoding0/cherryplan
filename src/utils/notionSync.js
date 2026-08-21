@@ -463,6 +463,56 @@ export async function syncMoodTracker(entries) {
   return syncItems({ items: entries, dbId, buildProps: buildMoodProps, getTitle: (e) => e.date })
 }
 
+// DB ID를 생성 없이 찾기만: NOTION_DB → localStorage 캐시 → 노션 제목 검색
+// (다른 기기/서버에서도 같은 DB를 찾아 읽을 수 있게 함)
+async function findDbIdByTitle(dbKey, titleQuery) {
+  if (NOTION_DB[dbKey]) return NOTION_DB[dbKey]
+  const cached = loadDbIds()[dbKey]
+  if (cached) return cached
+  try {
+    const res = await fetch(`${BASE}/search`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: titleQuery,
+        filter: { value: 'database', property: 'object' },
+        page_size: 5,
+      }),
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    const db = (data.results || []).find((r) => r.object === 'database')
+    if (db) {
+      saveDbId(dbKey, db.id)
+      return db.id
+    }
+  } catch { /* 네트워크 실패 시 조용히 포기 */ }
+  return null
+}
+
+// ── 무드 트래커 조회 (노션 → 로컬 병합용) ─────────────────────────
+export async function fetchMoodTracker() {
+  const dbId = await findDbIdByTitle('moodTracker', '무드 트래커')
+  if (!dbId) return []
+  const rows = await queryDB(dbId, {
+    sorts: [{ property: '날짜', direction: 'descending' }],
+    page_size: 100,
+  })
+  return rows.map((p) => {
+    const title = txt(p.properties['기분이모지']) // 예: "😊 좋아요"
+    const [mood, ...labelParts] = title.split(' ')
+    return {
+      id: p.id,
+      notionId: p.id,
+      date: dt(p.properties['날짜']),
+      mood: mood || '😌',
+      moodLabel: labelParts.join(' ') || '',
+      memo: txt(p.properties['메모']),
+      claudeMessage: txt(p.properties['Claude메시지']),
+    }
+  }).filter((e) => e.date)
+}
+
 export async function syncAiDiary(entries) {
   if (!NOTION_DB.aiDiary) {
     throw new Error('Notion AI 일기 DB ID가 설정되지 않았어요. notionSync.js의 NOTION_DB.aiDiary를 채워주세요.')
