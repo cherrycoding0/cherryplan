@@ -1,5 +1,5 @@
 // TMDB 프록시 — API 키를 서버(환경변수)에서만 사용, 클라이언트 노출 없음
-exports.handler = async (event) => {
+export const handler = async (event) => {
   const apiKey = process.env.TMDB_API_KEY
   if (!apiKey) {
     return {

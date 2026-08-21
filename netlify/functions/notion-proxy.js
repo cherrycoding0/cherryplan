@@ -1,4 +1,4 @@
-exports.handler = async (event) => {
+export const handler = async (event) => {
   const notionPath = event.path.replace(/^\/api\/notion/, '')
   const url = `https://api.notion.com${notionPath}`
 
