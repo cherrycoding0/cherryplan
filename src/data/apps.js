@@ -38,9 +38,10 @@ export const apps = [
     emoji: '📸',
     name: '픽BTI',
     description: '사진 한 장 올리면 AI가 오늘의 MBTI를 분석하고 30초 팟캐스트로 수다떨어요',
-    tags: ['AI', '이미지분석', 'MBTI'],
+    tags: ['Kanana-o', '멀티모달 AI', 'TTS'],
     difficulty: '⭐⭐⭐',
-    external: 'https://pic-bti.netlify.app/',
+    path: '/pic-bti',
+    showcase: true, // 실전 프로젝트 섹션에 표시 (상세 소개 페이지로 연결)
     color: '#E0F7FA',
     highlight: true,
     devDiary: '',

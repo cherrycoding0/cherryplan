@@ -12,6 +12,7 @@ import Budget from './pages/Budget'
 import AiDiary from './pages/AiDiary'
 import MoodTracker from './pages/MoodTracker'
 import Dashboard from './pages/Dashboard'
+import PicBti from './pages/PicBti'
 import { PomodoroProvider, usePomodoroContext } from './context/PomodoroContext'
 
 function formatTime(seconds) {
@@ -95,6 +96,7 @@ function AnimatedRoutes() {
         <Route path="/ai-diary" element={<AiDiary />} />
         <Route path="/mood-tracker" element={<MoodTracker />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/pic-bti" element={<PicBti />} />
       </Routes>
     </main>
   )

@@ -11,6 +11,7 @@ export default function AppCard({ app }) {
     <article
       onClick={open}
       className="
+        group
         bg-white rounded-2xl shadow-md hover:shadow-xl
         cursor-pointer overflow-hidden
         transition-all duration-200
@@ -27,7 +28,11 @@ export default function AppCard({ app }) {
         className="flex items-center justify-center py-8 relative"
         style={{ backgroundColor: color }}
       >
-        <span className="text-5xl select-none" role="img" aria-hidden="true">
+        <span
+          className="text-5xl select-none transition-transform duration-200 group-hover:scale-110"
+          role="img"
+          aria-hidden="true"
+        >
           {emoji}
         </span>
         {highlight && (
@@ -38,6 +43,14 @@ export default function AppCard({ app }) {
             px-2 py-0.5 rounded-full
           ">
             ✨ AI 탑재
+          </span>
+        )}
+        {external && (
+          <span
+            className="absolute bottom-2.5 right-3 text-xs font-bold text-[#1A1A2E]/40 group-hover:text-[#E84393] transition-colors"
+            aria-hidden="true"
+          >
+            새 탭 ↗
           </span>
         )}
       </div>
