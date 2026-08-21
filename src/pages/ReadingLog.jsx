@@ -124,7 +124,8 @@ function BookModal({ initial, onSave, onClose }) {
         output: 'js',
         Version: '20131101',
       })
-      const res = await fetch(`/api/aladin?${params}`)
+      // cache: 'no-store' — 예전 http 시절 301 리다이렉트가 URL별로 영구 캐싱되는 문제 차단
+      const res = await fetch(`/api/aladin?${params}`, { cache: 'no-store' })
       const data = await res.json()
       setResults(data.item || [])
     } catch {

@@ -24,6 +24,19 @@ export default function Header() {
   const isHome = location.pathname === '/'
   const currentApp = apps.find((a) => a.path === location.pathname)
 
+  // 실전/연습 섹션으로 스크롤 — 홈이 아니면 홈으로 이동 후 스크롤
+  function goSection(id) {
+    setMobileOpen(false)
+    if (isHome) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/')
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+      }, 350)
+    }
+  }
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-pink-100">
       <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -50,6 +63,22 @@ export default function Header() {
 
         {/* 우측 */}
         <div className="flex items-center gap-3">
+          {/* 실전/연습 탭 — 데스크톱 */}
+          <div className="hidden sm:flex items-center bg-gray-100 rounded-full p-0.5">
+            <button
+              onClick={() => goSection('showcase')}
+              className="text-xs font-semibold text-gray-500 hover:text-white hover:bg-[#FF6B8A] px-3 py-1 rounded-full transition-colors"
+            >
+              🚀 실전
+            </button>
+            <button
+              onClick={() => goSection('miniapps')}
+              className="text-xs font-semibold text-gray-500 hover:text-white hover:bg-[#FF6B8A] px-3 py-1 rounded-full transition-colors"
+            >
+              🧩 연습
+            </button>
+          </div>
+
           {/* 대시보드 링크 — 데스크톱 */}
           <Link
             to="/dashboard"
@@ -58,16 +87,12 @@ export default function Header() {
             📊 대시보드
           </Link>
 
-          {/* {currentApp?.devDiary && (
-            <a
-              href={currentApp.devDiary}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:flex items-center text-xs font-semibold text-gray-400 hover:text-[#FF6B8A] transition-colors border border-gray-200 hover:border-[#FF6B8A] px-2.5 py-1 rounded-full"
-            >
-              📝 개발 일지
-            </a>
-          )} */}
+          <Link
+            to="/devlog"
+            className="hidden sm:flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-[#FF6B8A] transition-colors border border-gray-200 hover:border-[#FF6B8A] px-2.5 py-1 rounded-full"
+          >
+            📝 개발 일지
+          </Link>
 
           <a
             href="https://github.com/cherrycoding0"
@@ -95,6 +120,18 @@ export default function Header() {
       {/* 모바일 드롭다운 */}
       {mobileOpen && (
         <div className="sm:hidden border-t border-pink-100 bg-white/95 px-4 py-3 flex flex-col gap-2">
+          <button
+            onClick={() => goSection('showcase')}
+            className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#FF6B8A] transition-colors py-1.5 text-left"
+          >
+            🚀 실전 프로젝트
+          </button>
+          <button
+            onClick={() => goSection('miniapps')}
+            className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#FF6B8A] transition-colors py-1.5 text-left"
+          >
+            🧩 연습 미니앱
+          </button>
           <Link
             to="/dashboard"
             onClick={() => setMobileOpen(false)}
@@ -102,17 +139,13 @@ export default function Header() {
           >
             📊 대시보드
           </Link>
-          {/* {currentApp?.devDiary && (
-            <a
-              href={currentApp.devDiary}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#FF6B8A] transition-colors py-1.5"
-            >
-              📝 개발 일지
-            </a>
-          )} */}
+          <Link
+            to="/devlog"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#FF6B8A] transition-colors py-1.5"
+          >
+            📝 개발 일지
+          </Link>
         </div>
       )}
     </header>

@@ -13,6 +13,7 @@ import AiDiary from './pages/AiDiary'
 import MoodTracker from './pages/MoodTracker'
 import Dashboard from './pages/Dashboard'
 import PicBti from './pages/PicBti'
+import DevLog from './pages/DevLog'
 import { PomodoroProvider, usePomodoroContext } from './context/PomodoroContext'
 
 function formatTime(seconds) {
@@ -66,8 +67,19 @@ function PomodoroFloat() {
 function AnimatedRoutes() {
   const location = useLocation()
   const mainRef = useRef(null)
+  const homeScrollY = useRef(0) // 메인에서 보던 스크롤 위치 저장
+  const prevPath = useRef(location.pathname)
 
   useEffect(() => {
+    // 스크롤 처리: 상세로 가면 맨 위로, 메인으로 돌아오면 보던 위치로
+    if (location.pathname === '/') {
+      window.scrollTo(0, homeScrollY.current)
+    } else {
+      if (prevPath.current === '/') homeScrollY.current = window.scrollY
+      window.scrollTo(0, 0)
+    }
+    prevPath.current = location.pathname
+
     if (mainRef.current) {
       mainRef.current.style.opacity = '0'
       mainRef.current.style.transform = 'translateY(8px)'
@@ -97,6 +109,7 @@ function AnimatedRoutes() {
         <Route path="/mood-tracker" element={<MoodTracker />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pic-bti" element={<PicBti />} />
+        <Route path="/devlog" element={<DevLog />} />
       </Routes>
     </main>
   )

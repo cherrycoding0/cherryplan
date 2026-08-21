@@ -21,14 +21,15 @@ exports.handler = async (event) => {
     const userText = (body.messages || []).map((m) => m.content).join('\n')
     const payload = {
       contents: [{ role: 'user', parts: [{ text: userText }] }],
-      generationConfig: { maxOutputTokens: body.max_tokens || 600 },
+      // thinking 모델이 내부 추론에 토큰을 쓰므로 여유 있게 + JSON 강제 출력
+      generationConfig: { maxOutputTokens: 4096, responseMimeType: 'application/json' },
     }
     if (body.system) {
       payload.systemInstruction = { parts: [{ text: body.system }] }
     }
 
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
       { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }
     )
 
@@ -38,7 +39,8 @@ exports.handler = async (event) => {
     }
 
     const data = await res.json()
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    const parts = data?.candidates?.[0]?.content?.parts || []
+    const text = parts.map((p) => p.text || '').join('')
     // Gemini 응답 → 기존 Claude 형식으로 감싸서 반환 (클라이언트가 그대로 파싱)
     return { statusCode: 200, headers: cors(), body: JSON.stringify({ content: [{ text }] }) }
   } catch (err) {

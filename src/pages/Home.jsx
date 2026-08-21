@@ -138,7 +138,7 @@ export default function Home() {
       </section>
 
       {/* ── 실전 프로젝트 ── */}
-      <section>
+      <section id="showcase" className="scroll-mt-20">
         <SectionHeader
           title="🚀 실전 프로젝트"
           count={showcaseApps.length}
@@ -152,7 +152,7 @@ export default function Home() {
       </section>
 
       {/* ── 연습 미니앱 ── */}
-      <section>
+      <section id="miniapps" className="scroll-mt-20">
         <SectionHeader
           title="🧩 연습 미니앱"
           count={miniApps.length}

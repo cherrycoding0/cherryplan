@@ -4,7 +4,7 @@ exports.handler = async (event) => {
   params.set('output', 'js')
   params.set('Version', '20131101')
 
-  const url = `http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?${params.toString()}`
+  const url = `https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?${params.toString()}`
 
   try {
     const res = await fetch(url)
